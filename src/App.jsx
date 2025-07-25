@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="h-screen flex flex-col bg-gradient-to-t from-violet-500 to-blue-500 text-white">
       
-      <div className="flex items-center justify-center py-5! mb-10!">
+      <div className="flex items-center justify-center mb-15!">
         <img src="cashg.png" className="h-15"/>
         <b className="text-[35px]">Cash</b>
       </div>
@@ -15,7 +15,6 @@ function App() {
       <div className='flex flex-col items-center md:flex-row md:justify-center md:items-start gap-2 mb-5!'>
         <Search />
         <AddButton />
-        
       </div>
 
       <div className="flex-grow overflow-hidden">

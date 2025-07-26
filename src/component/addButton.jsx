@@ -106,7 +106,7 @@ export default function AddButton({ data, setData }) {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 max-h-[100dvh] overflow-y-auto"
+            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 max-w-[320px] max-h-[100dvh] overflow-y-auto"
           >
             <div
               onClick={() => inputRef.current?.click()}
@@ -116,7 +116,7 @@ export default function AddButton({ data, setData }) {
                 <img
                   src={image}
                   alt="Captured"
-                  className="w-full h-32 object-contain"
+                  className="w-full h-full object-contain"
                 />
               ) : (
                 <>

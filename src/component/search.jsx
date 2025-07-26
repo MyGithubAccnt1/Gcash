@@ -9,7 +9,6 @@ export default function Search({ setSearch, setFilter }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!find.trim()) return;
     setSearch(find);
   };
 

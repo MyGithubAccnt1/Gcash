@@ -2,29 +2,46 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
-export default function Search({ filter, setFilter }) {
+export default function Search({ setSearch, setFilter }) {
   const [filterModal, setFilterModal] = useState(false);
   const [mode, setMode] = useState(null);
+  const [find, setFind] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    setFilter(mode);
+    if (!find.trim()) return;
+    setSearch(find);
+  };
+
+  const handleFilter = (e) => {
+    e.preventDefault();
+    if (mode === "All") {
+      setMode(null);
+    } else {
+      setFilter(mode);
+    }
     setFilterModal(false);
   };
   return (
     <>
-      <div className="relative">
+      <form onSubmit={handleSearch} className="relative">
         <input
           type="search"
           id="Search"
           placeholder="Search"
+          value={find}
+          onChange={(e) => setFind(e.target.value)}
           className="bg-[rgba(255,255,255,0.3)] rounded-full px-5! px-12! py-3!"
         />
+
         <label htmlFor="Search" className="cursor-pointer">
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
             className="absolute left-0 translate-x-[15%] top-[50%] -translate-y-[50%] rounded-full p-2! hover:bg-[rgba(0,0,0,0.1)]"
           />
+        </label>
+
+        <span className="cursor-pointer">
           <FontAwesomeIcon
             onClick={() => {
               setFilterModal(true);
@@ -32,12 +49,12 @@ export default function Search({ filter, setFilter }) {
             icon={faFilter}
             className="absolute right-0 -translate-x-[15%] top-[50%] -translate-y-[50%] rounded-full p-2! hover:bg-[rgba(0,0,0,0.1)]"
           />
-        </label>
-      </div>
+        </span>
+      </form>
 
       {filterModal && (
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleFilter}
           onClick={() => setFilterModal(false)}
           className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50 text-black"
         >
@@ -48,19 +65,21 @@ export default function Search({ filter, setFilter }) {
             <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
               <label
                 className={`absolute transition-all duration-300 select-none ${
-                  mode !== "" && mode !== null
+                  mode !== "All" || mode !== null
                     ? "text-sm italic top-1 text-gray-500"
                     : "text-md"
                 }`}
               >
-                {mode !== "" && mode !== null ? "Mode" : "All"}
+                Mode
               </label>
               <select
                 className="outline-none w-full"
                 value={mode || ""}
                 onChange={(e) => setMode(e.target.value)}
               >
-                <option className="bg-[rgba(0,0,0,0.1)]" value=""></option>
+                <option className="bg-[rgba(0,0,0,0.1)]" value="All">
+                  All
+                </option>
                 <option className="bg-[rgba(0,0,0,0.1)]" value="Sent">
                   Sent
                 </option>

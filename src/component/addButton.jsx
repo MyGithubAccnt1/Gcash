@@ -168,7 +168,7 @@ export default function AddButton({ data, setData }) {
                     number ? "text-sm italic top-1" : "text-md"
                   }`}
                 >
-                  Sender
+                  Sender(+63 900 000 0000)
                 </label>
                 <input
                   id="sender"
@@ -211,7 +211,7 @@ export default function AddButton({ data, setData }) {
                     reference ? "text-sm italic top-1" : "text-md"
                   }`}
                 >
-                  Reference No.
+                  Reference No.(0000 000 000)
                 </label>
                 <input
                   id="reference"

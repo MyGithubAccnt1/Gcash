@@ -12,6 +12,7 @@ function App() {
     }
   });
   const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -42,12 +43,17 @@ function App() {
         </div>
 
         <div className="flex flex-col items-center md:flex-row md:justify-center md:items-start gap-2 mb-5!">
-          <Search filter={filter} setFilter={setFilter} />
+          <Search setSearch={setSearch} setFilter={setFilter} />
           <AddButton data={data} setData={setData} />
         </div>
 
         <div className="flex-grow overflow-hidden">
-          <FetchData data={data} setData={setData} filter={filter} />
+          <FetchData
+            data={data}
+            setData={setData}
+            search={search}
+            filter={filter}
+          />
         </div>
       </div>
     </>

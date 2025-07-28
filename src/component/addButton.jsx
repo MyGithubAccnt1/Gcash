@@ -114,7 +114,7 @@ export default function AddButton({ data, setData }) {
             <div className="flex gap-2 justify-between">
               <div
                 onClick={() => inputRef1.current?.click()}
-                className="md:hidden flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+                className="md:!mx-auto flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <i className="text-sm select-none">Upload Image</i>
@@ -129,7 +129,7 @@ export default function AddButton({ data, setData }) {
               </div>
               <div
                 onClick={() => inputRef2.current?.click()}
-                className="md:!mx-auto flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+                className="md:hidden flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
               >
                 <FontAwesomeIcon icon={faCamera} />
                 <i className="text-sm select-none">Capture Image</i>

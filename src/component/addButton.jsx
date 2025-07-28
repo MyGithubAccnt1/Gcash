@@ -123,7 +123,6 @@ export default function AddButton({ data, setData }) {
                   ref={inputRef1}
                   type="file"
                   accept="image/*"
-                  capture="environment"
                   onChange={handleImage}
                   className="hidden"
                 />
@@ -139,7 +138,7 @@ export default function AddButton({ data, setData }) {
                   ref={inputRef2}
                   type="file"
                   accept="image/*"
-                  capture="user"
+                  capture="environment"
                   onChange={handleImage}
                   className="hidden"
                 />

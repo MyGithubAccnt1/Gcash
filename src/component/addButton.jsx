@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Tesseract from "tesseract.js";
 import Loader from "./loader";
@@ -7,7 +7,8 @@ import Loader from "./loader";
 export default function AddButton({ data, setData }) {
   const [filterModal, setFilterModal] = useState(false);
 
-  const inputRef = useRef(null);
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
   const [image, setImage] = useState(null);
   const [mode, setMode] = useState(null);
   const [number, setNumber] = useState(null);
@@ -29,7 +30,8 @@ export default function AddButton({ data, setData }) {
       setAmount(null);
       setReference(null);
       setDate(null);
-      inputRef.current.value = null;
+      inputRef1.current.value = null;
+      inputRef2.current.value = null;
       setLoading(false);
     }
   }
@@ -83,7 +85,8 @@ export default function AddButton({ data, setData }) {
     setAmount(null);
     setReference(null);
     setDate(null);
-    inputRef.current.value = null;
+    inputRef1.current.value = null;
+    inputRef2.current.value = null;
     setLoading(false);
   };
   return (
@@ -108,32 +111,52 @@ export default function AddButton({ data, setData }) {
             onClick={(e) => e.stopPropagation()}
             className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 max-w-[320px] max-h-[100dvh] overflow-y-auto"
           >
-            <div
-              onClick={() => inputRef.current?.click()}
-              className="flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
-            >
-              {image ? (
-                <img
-                  src={image}
-                  alt="Captured"
-                  className="w-full h-full object-contain"
+            <div className="flex gap-2 justify-between">
+              <div
+                onClick={() => inputRef1.current?.click()}
+                className="md:hidden flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faPlus} />
+                <i className="text-sm select-none">Upload Image</i>
+                <input
+                  id="cameraInput"
+                  ref={inputRef1}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleImage}
+                  className="hidden"
                 />
-              ) : (
-                <>
-                  <FontAwesomeIcon icon={faPlus} />
-                  <i className="text-sm select-none">Upload Image</i>
-                </>
-              )}
-              <input
-                id="cameraInput"
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleImage}
-                className="hidden"
-              />
+              </div>
+              <div
+                onClick={() => inputRef2.current?.click()}
+                className="md:!mx-auto flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={faCamera} />
+                <i className="text-sm select-none">Capture Image</i>
+                <input
+                  id="cameraInput"
+                  ref={inputRef2}
+                  type="file"
+                  accept="image/*"
+                  capture="user"
+                  onChange={handleImage}
+                  className="hidden"
+                />
+              </div>
             </div>
+            
+            {image && (
+              <div
+                className="flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+              >
+                <img
+                    src={image}
+                    alt="Captured"
+                    className="w-full h-full object-contain"
+                  />
+              </div>
+            )}
 
             <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
               <label

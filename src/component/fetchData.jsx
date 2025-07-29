@@ -1,20 +1,26 @@
 export default function FetchData({ data, search, filter }) {
   const received = data
-    .filter(item => item.mode === "Received")
+    .filter((item) => item.mode === "Received")
     .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
   const sent = data
-    .filter(item => item.mode === "Sent")
+    .filter((item) => item.mode === "Sent")
     .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
   return (
     <div className="h-full p-5! flex flex-col gap-2 overflow-y-auto">
       <div className="flex gap-2">
         <div className="bg-[rgba(255,255,255,0.1)] w-1/2 !p-5 rounded-lg">
-          <b>RECEIVED<br/> PHP {received.toLocaleString()}</b>
+          <b>
+            RECEIVED
+            <br /> PHP {received.toLocaleString()}
+          </b>
         </div>
         <div className="bg-[rgba(255,255,255,0.1)] w-1/2 !p-5 rounded-lg">
-          <b>SENT<br/> PHP {sent.toLocaleString()}</b>
+          <b>
+            SENT
+            <br /> PHP {sent.toLocaleString()}
+          </b>
         </div>
       </div>
       {data.length > 0 ? (

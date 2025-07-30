@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
-import Tesseract from "tesseract.js";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
+import axios from 'axios';
 
 export default function AddButton({ data, setData }) {
   const [filterModal, setFilterModal] = useState(false);
@@ -19,7 +19,7 @@ export default function AddButton({ data, setData }) {
   const [loading, setLoading] = useState(false);
 
   const ocrScanner = Ocr({ number: "09979116656" });
-
+  const url = 'https://script.google.com/macros/s/AKfycbwEgU4hAdvqOUgufqZN06Xkuoy5vib18YxqP1DqCw2J-rJ3lvllywLCI6x4z1Hij9vB/exec';
   function handleCloseModal() {
     if (
       window.confirm(
@@ -50,12 +50,9 @@ export default function AddButton({ data, setData }) {
 
     try {
       const ocrResult = await ocrScanner.extract(file);
-
-      console.log(ocrResult);
-
       setMode(ocrResult.type);
       setNumber(ocrResult.number);
-      setAmount(ocrResult.amount);
+      setAmount(ocrResult.amount.replace(/,/g, ''));
       setReference(ocrResult.reference);
       setDate(ocrResult.date);
     } catch (error) {
@@ -65,7 +62,7 @@ export default function AddButton({ data, setData }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isValid = number && amount && reference && date;
@@ -77,6 +74,7 @@ export default function AddButton({ data, setData }) {
     setLoading(true);
 
     const newEntry = {
+      system: 'gcash',
       mode: mode,
       to: number,
       amount: amount,
@@ -85,6 +83,20 @@ export default function AddButton({ data, setData }) {
     };
 
     const updated = [...data, newEntry];
+
+    try {
+      const params = new URLSearchParams();
+      params.append("data", JSON.stringify(newEntry));
+
+      const response = await axios.post(url, params, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+      }});
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error sending data:', error.response?.data || error.message);
+    }
+
     localStorage.setItem("data", JSON.stringify(updated));
     setData(updated);
 

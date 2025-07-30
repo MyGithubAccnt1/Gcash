@@ -2,40 +2,34 @@ import Search from "./component/search";
 import AddButton from "./component/addButton";
 import FetchData from "./component/fetchData";
 import { useEffect, useState } from "react";
+import Loader from "./component/loader";
+
 function App() {
-  const [data, setData] = useState(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem("data"));
-      return Array.isArray(stored) ? stored : [];
-    } catch {
-      return [];
-    }
-  });
+  const [data, setData] = useState("");
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === "data") {
-        try {
-          const newData = JSON.parse(e.newValue);
-          if (Array.isArray(newData)) {
-            setData(newData);
-          }
-        } catch (err) {
-          console.error("Error parsing localStorage data:", err);
-        }
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://script.google.com/macros/s/AKfycbxwtXHLh2V86qFbEHhOUacmTeIjM4tFumS4VC8S1QOJJFbo4GllcgLFCYMkDr6vrGle/exec');
+        const result = await response.json();
+        setData(Array.isArray(result) ? result : []);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setData([]);
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    fetchData();
   }, []);
+
   return (
     <>
+      {loading && <Loader />}
       <div className="h-screen flex bg-gradient-to-t from-violet-500 to-blue-500 text-white relative">
         {/* <div className="h-screen flex flex-col w-[320px] bg-[rgba(255,255,255,0.1)]">
           

@@ -1,12 +1,15 @@
 export default function FetchData({ data, search, filter }) {
-  const received = data
-    .filter((item) => item.mode === "Received")
-    .reduce((acc, curr) => acc + Number(curr.amount), 0);
+  let received = 0;
+  let sent = 0;
+  if (data) {
+    received = data
+      .filter((item) => item.mode === "Received")
+      .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-  const sent = data
-    .filter((item) => item.mode === "Sent")
-    .reduce((acc, curr) => acc + Number(curr.amount), 0);
-
+    sent = data
+      .filter((item) => item.mode === "Sent")
+      .reduce((acc, curr) => acc + Number(curr.amount), 0);
+  }
   return (
     <div className="h-full p-5! flex flex-col gap-2 overflow-y-auto">
       <div className="flex gap-2">

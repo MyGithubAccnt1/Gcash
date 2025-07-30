@@ -1,0 +1,1 @@
+export const GS_DATA_URL = 'https://script.google.com/macros/s/AKfycbxwtXHLh2V86qFbEHhOUacmTeIjM4tFumS4VC8S1QOJJFbo4GllcgLFCYMkDr6vrGle/exec';

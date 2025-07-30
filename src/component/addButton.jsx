@@ -3,6 +3,7 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
+import { GS_DATA_URL } from"../utils/constant";
 import axios from 'axios';
 
 export default function AddButton({ data, setData }) {
@@ -19,7 +20,6 @@ export default function AddButton({ data, setData }) {
   const [loading, setLoading] = useState(false);
 
   const ocrScanner = Ocr({ number: "09979116656" });
-  const url = 'https://script.google.com/macros/s/AKfycbwEgU4hAdvqOUgufqZN06Xkuoy5vib18YxqP1DqCw2J-rJ3lvllywLCI6x4z1Hij9vB/exec';
   function handleCloseModal() {
     if (
       window.confirm(
@@ -88,7 +88,7 @@ export default function AddButton({ data, setData }) {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
 
-      const response = await axios.post(url, params, {
+      const response = await axios.post(GS_DATA_URL, params, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
       }});

@@ -28,23 +28,15 @@ export default function Index() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    console.log("called 1");
-
     if (isFirstRender) {
       setFirstRender(false);
       return;
     }
-
-    console.log(document.body.getBoundingClientRect());
-    console.log(
-      window.scrollY - Math.abs(board.current.getBoundingClientRect().top)
-    );
-
     localStorage.setItem("kanbanboard", JSON.stringify(todos));
   }, [todos]);
 
   useEffect(() => {
-    setTodos(JSON.parse(localStorage.getItem("kanbanboard")));
+    setTodos(JSON.parse(localStorage.getItem("kanbanboard")) ?? []);
   }, []);
 
   const positionHandler = ({ x, y, id }) => {
@@ -181,26 +173,27 @@ export default function Index() {
   const getTodosByType = ({ todos, positionHandler, handleDeletion, type }) => {
     return (
       <>
-        {todos
-          .filter((todo) => todo.type === type)
-          .sort((x, y) => x.priority - y.priority)
-          .map((todo) => {
-            return (
-              <CanbanTask
-                key={todo.id}
-                id={todo.id}
-                defaultSpawn={todo.spawn}
-                bound="#board"
-                title={todo.title}
-                content={todo.content}
-                positionHandler={positionHandler}
-                handleDeletion={handleDeletion}
-                type={todo.type}
-                assign={todo.assign?.[todo.assign.length - 1]}
-                parentRef={board}
-              />
-            );
-          })}
+        {todos?.length &&
+          todos
+            .filter((todo) => todo.type === type)
+            .sort((x, y) => x.priority - y.priority)
+            .map((todo) => {
+              return (
+                <CanbanTask
+                  key={todo.id}
+                  id={todo.id}
+                  defaultSpawn={todo.spawn}
+                  bound="#board"
+                  title={todo.title}
+                  content={todo.content}
+                  positionHandler={positionHandler}
+                  handleDeletion={handleDeletion}
+                  type={todo.type}
+                  assign={todo.assign?.[todo.assign.length - 1]}
+                  parentRef={board}
+                />
+              );
+            })}
       </>
     );
   };
@@ -209,9 +202,12 @@ export default function Index() {
     const task = createTask({ title: title, content: content });
 
     setTodos((prev) => {
+      console.log(prev);
       return [...prev, task];
     });
   };
+
+  console.log("todos: ", todos);
 
   return (
     <>

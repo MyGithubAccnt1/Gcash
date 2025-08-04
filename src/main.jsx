@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <Home/>
       },
       {
-        path: 'canban',
+        path: 'kanban-board',
         element: <CanbanBoard/>
       }
     ]

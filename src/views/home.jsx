@@ -10,17 +10,34 @@ function Home() {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(GS_GCASH_URL);
-                const result = await response.json();
-                setData(Array.isArray(result) ? result : []);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setData([]);
-            }
+        const fetchData = () => {
+            const local = localStorage.getItem('gcash_data');
+            const data = JSON.parse(local);
+            const isValidData = Array.isArray(data);
+            setData(isValidData ? data : []);
+
+            const gcash_gs = async () => {
+                if (!isValidData) setLoading(true);
+
+                try {
+                    const response = await fetch(GS_GCASH_URL);
+                    const result = await response.json();
+                    const isValidResult = Array.isArray(result) ? result : [];
+
+                    const isDifferent = JSON.stringify(data) !== JSON.stringify(isValidResult);
+
+                    if (isDifferent) {
+                        setData(isValidResult);
+                        localStorage.setItem('gcash_data', JSON.stringify(isValidResult));
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch:', error);
+                } finally {
+                    if (!isValidData) setLoading(false);
+                }
+            };
+
+            gcash_gs();
         };
 
         fetchData();

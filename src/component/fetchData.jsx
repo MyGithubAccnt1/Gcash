@@ -20,20 +20,20 @@ export default function FetchData({ data, search, filter }) {
   }
   return (
     <div className="h-full !p-5 flex flex-col gap-2 overflow-y-auto">
-      <div className="flex gap-2">
-        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
+      <div className="flex flex-col md:flex-row md:justify-between gap-2">
+        <div className="bg-[rgba(255,255,255,0.1)] w-full !p-5 rounded-lg">
           <b>
             RECEIVED
             <br /> PHP {received.toLocaleString()}
           </b>
         </div>
-        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
+        <div className="bg-[rgba(255,255,255,0.1)] w-full !p-5 rounded-lg">
           <b>
             SENT
             <br /> PHP {sent.toLocaleString()}
           </b>
         </div>
-        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
+        <div className="bg-[rgba(255,255,255,0.1)] w-full !p-5 rounded-lg">
           <b>
             PROFIT
             <br /> PHP {profit.toLocaleString()}

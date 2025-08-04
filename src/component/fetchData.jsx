@@ -1,6 +1,7 @@
 export default function FetchData({ data, search, filter }) {
   let received = 0;
   let sent = 0;
+  let profit = 0;
   if (data) {
     received = data
       .filter((item) => item.mode === "Received")
@@ -9,20 +10,33 @@ export default function FetchData({ data, search, filter }) {
     sent = data
       .filter((item) => item.mode === "Sent")
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+    profit = data
+      .reduce((acc, curr) => {
+        const amount = Number(curr.amount);
+        const fee = Math.ceil(amount / 500) * 5;
+        return acc + fee;
+      }, 0);
   }
   return (
     <div className="h-full p-5! flex flex-col gap-2 overflow-y-auto">
       <div className="flex gap-2">
-        <div className="bg-[rgba(255,255,255,0.1)] w-1/2 !p-5 rounded-lg">
+        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
           <b>
             RECEIVED
             <br /> PHP {received.toLocaleString()}
           </b>
         </div>
-        <div className="bg-[rgba(255,255,255,0.1)] w-1/2 !p-5 rounded-lg">
+        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
           <b>
             SENT
             <br /> PHP {sent.toLocaleString()}
+          </b>
+        </div>
+        <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
+          <b>
+            PROFIT
+            <br /> PHP {profit.toLocaleString()}
           </b>
         </div>
       </div>

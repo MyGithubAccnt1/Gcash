@@ -19,7 +19,7 @@ export default function FetchData({ data, search, filter }) {
       }, 0);
   }
   return (
-    <div className="h-full p-5! flex flex-col gap-2 overflow-y-auto">
+    <div className="h-full !p-5 flex flex-col gap-2 overflow-y-auto">
       <div className="flex gap-2">
         <div className="bg-[rgba(255,255,255,0.1)] w-1/3 !p-5 rounded-lg">
           <b>

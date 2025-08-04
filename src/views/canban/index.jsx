@@ -211,7 +211,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="!p-3 w-full">
         <section className="flex !p-2">
           <button
             className="!px-3 !py-2 rounded bg-indigo-500 cursor-pointer font-semibold text-white"

@@ -3,7 +3,7 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
-import { GS_DATA_URL } from"../utils/constant";
+import { GS_GCASH_URL } from"../utils/constant";
 import axios from 'axios';
 
 export default function AddButton({ data, setData }) {
@@ -88,7 +88,7 @@ export default function AddButton({ data, setData }) {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
 
-      const response = await axios.post(GS_DATA_URL, params, {
+      const response = await axios.post(GS_GCASH_URL, params, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
       }});

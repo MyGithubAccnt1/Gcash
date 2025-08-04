@@ -3,7 +3,7 @@ import Search from "../component/search";
 import AddButton from "../component/addButton";
 import FetchData from "../component/fetchData";
 import Loader from "../component/loader";
-import { GS_DATA_URL } from "../utils/constant";
+import { GS_GCASH_URL } from "../utils/constant";
 function Home() {
     const [data, setData] = useState("");
     const [filter, setFilter] = useState("");
@@ -13,7 +13,7 @@ function Home() {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(GS_DATA_URL);
+                const response = await fetch(GS_GCASH_URL);
                 const result = await response.json();
                 setData(Array.isArray(result) ? result : []);
                 setLoading(false);

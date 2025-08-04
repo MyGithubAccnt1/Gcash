@@ -5,6 +5,8 @@ import withReactContent from "sweetalert2-react-content";
 import CanbanSection from "./components/canbanSection";
 import CanbanTask from "./components/canbanTask";
 import AddTaskForm from "./components/addTaskForm";
+import axios from 'axios';
+import { GS_KANBAN_URL } from"../../utils/constant";
 
 export default function Index() {
   const formHandler = AddTaskForm();
@@ -198,13 +200,26 @@ export default function Index() {
     );
   };
 
-  const addTask = ({ title, content }) => {
+  const addTask = async ({ title, content }) => {
     const task = createTask({ title: title, content: content });
 
     setTodos((prev) => {
-      console.log(prev);
+      // console.log(prev);
       return [...prev, task];
     });
+
+    try {
+      const params = new URLSearchParams();
+      params.append("data", JSON.stringify(task));
+
+      const response = await axios.post(GS_KANBAN_URL, params, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+      }});
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error sending data:', error.response?.data || error.message);
+    }
   };
 
   console.log("todos: ", todos);

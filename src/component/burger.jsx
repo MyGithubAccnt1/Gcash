@@ -4,7 +4,7 @@ function Burger( { button, setButton } ) {
             <button
                 type="button"
                 onClick={() => setButton(!button)}
-                className="w-[25px] h-[25px] md:hidden absolute left-0 !m-5"
+                className="w-[25px] h-[25px] md:hidden z-6 left-0 !m-5"
             >
                 <div
                 className={`

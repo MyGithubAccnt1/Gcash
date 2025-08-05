@@ -63,15 +63,77 @@ export default function FetchData({ data, search, filter }) {
           </b>
         </div>
       </div>
-      <table className="w-full bg-[rgba(255,255,255,0.1)] rounded-md">
+      <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-md md:hidden flex-col">
+        {paginatedData.length > 0 ? (
+          paginatedData.map((item, index) => (
+            <div key={index} className={`flex flex-col !p-5 ${index % 2 === 0 ? "bg-[rgba(255,255,255,0.1)]" : ""}`}>
+              <div className="text-center text-gray-300 font-bold"><b>{(startIndex) + index + 1}</b></div>
+              <div className="text-sm font-bold">Status: <b>{item.mode}</b></div>
+              <div className="text-sm font-bold">To: <b>{item.to}</b></div>
+              <div className="text-sm font-bold">Amount: <b>{item.amount}</b></div>
+              <div className="text-sm font-bold">Ref No.: <b>{item.refNo}</b></div>
+              <div className="text-sm font-bold">Date: <b>{item.date}</b></div>
+            </div>
+          ))
+        ) : (
+          <div>
+            <div className="text-sm"><b>No records were found.</b></div>
+          </div>
+        )}
+        <div className="flex justify-end items-center gap-3 !p-5">
+          <label><b className="text-sm">Rows Per Page:</b></label>
+
+          <div className="rounded-md border border-gray-300 !px-2 !py-1 bg-[rgba(255,255,255,0.1)]">
+            <b className="text-sm">
+              <select className="outline-0"
+                value={rowsPerPage}
+                onChange={(e) => {
+                  setRowsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+              >
+                <option value='5' className="bg-[#9566FF] font-bold">5</option>
+                <option value='10' className="bg-[#9A7CFF] font-bold">10</option>
+                <option value='15' className="bg-[#9566FF] font-bold">15</option>
+                <option value='20' className="bg-[#9A7CFF] font-bold">20</option>
+              </select>
+            </b>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <button className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]">
+              <b className="text-sm">{currentPage} / {totalPages}</b>
+            </button>
+            <div className="flex gap-1">
+              <button className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPageSafe === 1}
+              >
+                <FontAwesomeIcon icon={faAnglesLeft}/>
+              </button>
+              
+              <button className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPageSafe === totalPages}
+              >
+                <FontAwesomeIcon icon={faAnglesRight}/>
+              </button>
+            </div>
+
+          </div>
+
+          
+        </div>
+      </div>
+      <table className="w-full bg-[rgba(255,255,255,0.1)] rounded-md hidden md:block">
         <thead className="border-b border-gray-300">
           <tr>
-            <th className="w-[5%]"></th>
-            <th className="w-[10%] !py-3"><b>Mode</b></th>
-            <th className="w-[20%]"><b>To</b></th>
-            <th className="w-[15%]"><b>Amount</b></th>
-            <th className="w-[25%]"><b>Ref No.</b></th>
-            <th className="w-[25%]"><b>Date</b></th>
+            <th className="w-[5dvw]"></th>
+            <th className="w-[10dvw] !py-3"><b>Mode</b></th>
+            <th className="w-[20dvw]"><b>To</b></th>
+            <th className="w-[15dvw]"><b>Amount</b></th>
+            <th className="w-[25dvw]"><b>Ref No.</b></th>
+            <th className="w-[25dvw]"><b>Date</b></th>
           </tr>
         </thead>
         <tbody className="border-b border-gray-300">
@@ -88,17 +150,17 @@ export default function FetchData({ data, search, filter }) {
             ))
           ) : (
             <tr>
-              <td colSpan="6">No records were found.</td>
+              <td colSpan="6" className="!px-2 border-x border-gray-300 text-sm">No records were found.</td>
             </tr>
           )}
         </tbody>
         <tfoot>
           <tr role="row">
             <td colSpan='6' className="!py-3">
-              <div className="flex justify-end items-end gap-3 !px-5">
+              <div className="flex justify-end items-center gap-3 !px-5">
                 <label><b className="text-sm">Rows Per Page:</b></label>
 
-                <div className="rounded-md border border-gray-300 !p-2 bg-[rgba(255,255,255,0.1)]">
+                <div className="rounded-md border border-gray-300 !px-2 !py-1 bg-[rgba(255,255,255,0.1)]">
                   <b className="text-sm">
                     <select className="outline-0"
                       value={rowsPerPage}

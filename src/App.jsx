@@ -1,5 +1,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faBookJournalWhills, faGear } from "@fortawesome/free-solid-svg-icons";
 import Burger from "./component/burger";
 function App() {
   const [button, setButton] = useState(false);
@@ -21,13 +23,19 @@ function App() {
           >
             <NavLink to='/' className='bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]'>
               <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Main Page
+                <FontAwesomeIcon icon={faHome} className="text-white !me-3"/>Main Page
               </h1>
             </NavLink>
 
             <NavLink to='/kanban-board' className='bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]'>
               <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Feature Discussion
+                <FontAwesomeIcon icon={faBookJournalWhills} className="text-white !me-3"/>Feature Discussion
+              </h1>
+            </NavLink>
+
+            <NavLink to='/kanban-board' className='bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]'>
+              <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                <FontAwesomeIcon icon={faGear} className="text-white !me-3"/>Account Setting
               </h1>
             </NavLink>
           </div>

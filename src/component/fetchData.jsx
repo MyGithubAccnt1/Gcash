@@ -75,35 +75,6 @@ export default function FetchData({ data, search, filter }) {
           </tr>
         </thead>
         <tbody className="border-b border-gray-300">
-          {/* {data.length > 0 ? (
-            data
-              .slice()
-              .reverse()
-              .map((item, index) =>
-                filter && item.mode !== filter ? null : item.mode
-                    .toLowerCase()
-                    .includes(search.toLowerCase()) ||
-                  item.to.toLowerCase().includes(search.toLowerCase()) ||
-                  item.amount.toString().includes(search) ||
-                  item.refNo.toString().includes(search) ||
-                  item.date.toString().includes(search) ? (
-                  <tr role="row" key={index} className={index % 2 === 0 ? "bg-[rgba(255,255,255,0.1)]" : ""}>
-                    <td className="!py-2 border-e border-gray-300 border-l-0 text-center text-md text-gray-300">{index + 1}</td>
-                    <td className="!px-2 border-x border-gray-300 text-sm">{item.mode}</td>
-                    <td className="!px-2 border-x border-gray-300 text-sm">{item.to}</td>
-                    <td className="!px-2 border-x border-gray-300 text-sm text-end">{item.amount}</td>
-                    <td className="!px-2 border-x border-gray-300 text-sm">{item.refNo}</td>
-                    <td className="!px-2 border-s border-gray-300 border-r-0 text-sm">{item.date}</td>
-                  </tr>
-                ) : null
-              )
-          ) : (
-            <>
-              <tr role="row">
-                <td colSpan='6'>No records were found.</td>
-              </tr>
-            </>
-          )} */}
           {paginatedData.length > 0 ? (
             paginatedData.map((item, index) => (
               <tr role="row" key={index} className={index % 2 === 0 ? "bg-[rgba(255,255,255,0.1)]" : ""}>

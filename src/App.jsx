@@ -31,7 +31,7 @@ function App() {
               </h1>
             </NavLink>
 
-            <NavLink onClick={() => setButton(false)} to='/kanban-board' className='bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]'>
+            <NavLink onClick={() => setButton(false)} to='/account-setting' className='bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]'>
               <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 <FontAwesomeIcon icon={faGear} className="text-white !me-3"/>Account Setting
               </h1>

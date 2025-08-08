@@ -121,9 +121,7 @@ export default function FetchData({ data, search, filter }) {
                 <FontAwesomeIcon icon={faAnglesRight}/>
               </button>
             </div>
-
           </div>
-
           
         </div>
       </div>
@@ -152,7 +150,7 @@ export default function FetchData({ data, search, filter }) {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="!p-2 border-x border-gray-300 text-gray-200 text-sm text-center">No records were found.</td>
+              <td colSpan="6" className="!p-2 text-gray-200 text-sm text-center">No records were found.</td>
             </tr>
           )}
         </tbody>

@@ -6,7 +6,7 @@ import Ocr from "../utils/ocr";
 import { GS_GCASH_URL } from"../utils/constant";
 import axios from 'axios';
 
-export default function AddButton({ data, setData }) {
+export default function AddButton({ data, setData, setFetch }) {
   const [filterModal, setFilterModal] = useState(false);
 
   const inputRef1 = useRef(null);
@@ -19,7 +19,7 @@ export default function AddButton({ data, setData }) {
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const ocrScanner = Ocr({ number: "09979116656" });
+  const ocrScanner = Ocr({ number: "+63 915 349 8132" });
   function handleCloseModal() {
     if (
       window.confirm(
@@ -88,18 +88,17 @@ export default function AddButton({ data, setData }) {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
 
-      const response = await axios.post(GS_GCASH_URL, params, {
+      await axios.post(GS_GCASH_URL, params, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
       }});
-      console.log('Response:', response.data);
     } catch (error) {
       console.error('Error sending data:', error.response?.data || error.message);
     }
 
     localStorage.setItem("data", JSON.stringify(updated));
     setData(updated);
-
+    setFetch((prev) => !prev);
     setFilterModal(false);
     setImage(null);
     setMode(null);

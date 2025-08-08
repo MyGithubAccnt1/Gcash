@@ -117,7 +117,7 @@ export default function AddButton({ data, setData }) {
       {loading && <Loader />}
       <div
         onClick={() => setFilterModal(true)}
-        className="flex items-center gap-1 bg-[#E50000] px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
+        className="flex items-center gap-1 bg-red-600 px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
       >
         <b>Add Record</b>
         <FontAwesomeIcon icon={faPlus} />
@@ -297,7 +297,7 @@ export default function AddButton({ data, setData }) {
               </button>
               <button
                 type="submit"
-                className="text-white bg-[#E50000] !px-5 !py-3 rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
+                className="text-white bg-red-600 !px-5 !py-3 rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
               >
                 <b>Add</b>
               </button>

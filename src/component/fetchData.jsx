@@ -7,37 +7,39 @@ export default function FetchData({ data, search, filter }) {
   let sent = 0;
   let profit = 0;
   let filteredData = [];
-  if (data) {
-    received = data
+
+  if (data.length > 0) {
+    filteredData = data.filter((item) => {
+      const matchesFilter = filter ? item.mode === filter : true;
+      const matchesSearch = item.mode.toLowerCase().includes(search.toLowerCase()) || item.to.toLowerCase().includes(search.toLowerCase()) || item.amount.toString().includes(search) ||  item.refNo.toString().includes(search) || item.date.toString().includes(search);
+      return matchesFilter && matchesSearch;
+    });
+  }
+
+  if (filteredData.length > 0) {
+    received = filteredData
       .filter((item) => item.mode === "Received")
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-    sent = data
+    sent = filteredData
       .filter((item) => item.mode === "Sent")
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-    profit = data
+    profit = filteredData
       .reduce((acc, curr) => {
         const amount = Number(curr.amount);
         const fee = Math.ceil(amount / 500) * 5;
         return acc + fee;
       }, 0);
-    filteredData = data
-      .filter((item) => filter && item.mode !== filter
-        ? false
-        : item.mode.toLowerCase().includes(search.toLowerCase()) ||
-          item.to.toLowerCase().includes(search.toLowerCase()) ||
-          item.amount.toString().includes(search) ||
-          item.refNo.toString().includes(search) ||
-          item.date.toString().includes(search)
-    );
   }
+
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage));
   const currentPageSafe = Math.min(currentPage, totalPages);
   const startIndex = (currentPageSafe - 1) * rowsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
@@ -150,7 +152,7 @@ export default function FetchData({ data, search, filter }) {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="!px-2 border-x border-gray-300 text-sm">No records were found.</td>
+              <td colSpan="6" className="!p-2 border-x border-gray-300 text-gray-200 text-sm text-center">No records were found.</td>
             </tr>
           )}
         </tbody>

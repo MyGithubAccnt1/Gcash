@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Search from "../component/search";
 import AddButton from "../component/addButton";
+import DownloadButton from "../component/downloadButton";
 import FetchData from "../component/fetchData";
 import Loader from "../component/loader";
 import { GS_GCASH_URL } from "../utils/constant";
@@ -45,9 +46,12 @@ function Home() {
     return(
         <>
             {loading && <Loader />}
-            <div className="flex flex-col items-center md:flex-row md:justify-center md:items-start gap-2 mb-5!">
+            <div className="flex flex-col !px-5 items-center lg:flex-row lg:justify-center lg:items-start gap-2 mb-5!">
                 <Search setSearch={setSearch} setFilter={setFilter} />
-                <AddButton data={data} setData={setData} />
+                <div className="flex flex-col w-full items-end gap-2 md:flex-row md:justify-end md:items-center">
+                    <AddButton data={data} setData={setData} />
+                    <DownloadButton data={data} search={search} filter={filter} />
+                </div>
             </div>
 
             <div className="flex-grow overflow-hidden">

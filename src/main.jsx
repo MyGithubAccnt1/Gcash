@@ -1,40 +1,48 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Home from "./views/home";
 import Notfound from "./views/Notfound";
 import "./index.css";
 import CanbanBoard from "./views/canban/index";
+import Settings from "./views/settings";
 
 const baseName = import.meta.env.MODE === "development" ? "/" : "/Gcash";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      errorElement: <Notfound />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: "kanban-board",
+          element: <CanbanBoard />,
+        },
+        {
+          path: "account-setting",
+          element: <Settings />,
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <Notfound />,
+    },
+  ],
   {
-    path: '/',
-    element: <App/>,
-    errorElement: <Notfound/>,
-    children: [
-      {
-        index: true,
-        element: <Home/>
-      },
-      {
-        path: 'kanban-board',
-        element: <CanbanBoard/>
-      }
-    ]
-  },
-  {
-    path: '*',
-    element: <Notfound/>
+    basename: baseName,
   }
-], {
-  basename: baseName
-});
+);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </StrictMode>
 );

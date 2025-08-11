@@ -5,8 +5,8 @@ import withReactContent from "sweetalert2-react-content";
 import CanbanSection from "./components/canbanSection";
 import CanbanTask from "./components/canbanTask";
 import AddTaskForm from "./components/addTaskForm";
-import axios from 'axios';
-import { GS_KANBAN_URL } from"../../utils/constant";
+import axios from "axios";
+import { GS_KANBAN_URL } from "../../utils/constant";
 
 export default function Index() {
   const formHandler = AddTaskForm();
@@ -214,11 +214,15 @@ export default function Index() {
 
       const response = await axios.post(GS_KANBAN_URL, params, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-      }});
-      console.log('Response:', response.data);
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      console.log("Response:", response.data);
     } catch (error) {
-      console.error('Error sending data:', error.response?.data || error.message);
+      console.error(
+        "Error sending data:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -226,10 +230,10 @@ export default function Index() {
 
   return (
     <>
-      <div className="!p-3 w-full">
+      <div className="!p-3 w-full z-4">
         <section className="flex !p-2">
           <button
-            className="!px-3 !py-2 rounded bg-indigo-500 cursor-pointer font-semibold text-white"
+            className="flex items-center gap-1 bg-blue-600 px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
             onClick={() => showAddFormModal()}
           >
             Add Todo

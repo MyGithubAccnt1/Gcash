@@ -18,9 +18,11 @@ function Settings() {
             className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
           />
         </div>
-        <button className="md:w-1/4 md:!ms-auto text-center bg-red-600 px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer">
-          SUBMIT
-        </button>
+        <b className="md:!ms-auto">
+          <button className="text-center bg-red-600 px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer">
+            SUBMIT
+          </button>
+        </b>
         <b className="text-yellow-200 text-center">
           You don't have a registration code yet?{" "}
           <a

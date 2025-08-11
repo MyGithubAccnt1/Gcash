@@ -3,8 +3,8 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
-import { GS_GCASH_URL } from"../utils/constant";
-import axios from 'axios';
+import { GS_GCASH_URL } from "../utils/constant";
+import axios from "axios";
 
 export default function AddButton({ data, setData, setFetch }) {
   const [filterModal, setFilterModal] = useState(false);
@@ -52,7 +52,7 @@ export default function AddButton({ data, setData, setFetch }) {
       const ocrResult = await ocrScanner.extract(file);
       setMode(ocrResult.type);
       setNumber(ocrResult.number);
-      setAmount(ocrResult.amount.replace(/,/g, ''));
+      setAmount(ocrResult.amount.replace(/,/g, ""));
       setReference(ocrResult.reference);
       setDate(ocrResult.date);
     } catch (error) {
@@ -74,7 +74,7 @@ export default function AddButton({ data, setData, setFetch }) {
     setLoading(true);
 
     const newEntry = {
-      system: 'gcash',
+      system: "gcash",
       mode: mode,
       to: number,
       amount: amount,
@@ -90,10 +90,14 @@ export default function AddButton({ data, setData, setFetch }) {
 
       await axios.post(GS_GCASH_URL, params, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-      }});
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
     } catch (error) {
-      console.error('Error sending data:', error.response?.data || error.message);
+      console.error(
+        "Error sending data:",
+        error.response?.data || error.message
+      );
     }
 
     localStorage.setItem("data", JSON.stringify(updated));
@@ -210,7 +214,7 @@ export default function AddButton({ data, setData, setFetch }) {
                     number ? "text-sm italic top-1" : "text-md"
                   }`}
                 >
-                  Sender(+63 900 000 0000)
+                  Sender(+63 9XX XXX XXXX)
                 </label>
                 <input
                   id="sender"
@@ -253,11 +257,12 @@ export default function AddButton({ data, setData, setFetch }) {
                     reference ? "text-sm italic top-1" : "text-md"
                   }`}
                 >
-                  Reference No.(0000 000 000)
+                  Reference No.(XXXX XXX XXXXXX)
                 </label>
                 <input
                   id="reference"
                   type="text"
+                  pattern="\d{4}\s?\d{3}\s?\d{6}"
                   inputMode="numeric"
                   value={reference || ""}
                   onChange={(e) => setReference(e.target.value)}

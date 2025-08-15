@@ -111,7 +111,13 @@ export default function FetchData({ data, search, filter }) {
                 To: <b>{item.to}</b>
               </div>
               <div className="text-sm font-bold">
-                Amount: <b>{item.amount}</b>
+                Amount:{' '}
+                <b>
+                  {new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: item.amount % 1 === 0 ? 0 : 2,
+                    maximumFractionDigits: 2,
+                  }).format(item.amount)}
+                </b>
               </div>
               <div className="text-sm font-bold">
                 Ref No.: <b>{item.refNo}</b>
@@ -244,7 +250,10 @@ export default function FetchData({ data, search, filter }) {
                   {item.to}
                 </td>
                 <td className="!px-2 border-x border-gray-300 text-sm text-end">
-                  {item.amount}
+                  {new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: item.amount % 1 === 0 ? 0 : 2,
+                    maximumFractionDigits: 2,
+                  }).format(item.amount)}
                 </td>
                 <td className="!px-2 border-x border-gray-300 text-sm">
                   {item.refNo}

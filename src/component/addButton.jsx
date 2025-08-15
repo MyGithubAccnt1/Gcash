@@ -73,16 +73,11 @@ export default function AddButton({ data, setData, setFetch }) {
 
     setLoading(true);
 
-    const money = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
-
     const newEntry = {
       system: "gcash",
       mode: mode,
       to: number,
-      amount: money,
+      amount: amount,
       refNo: reference,
       date: date,
     };

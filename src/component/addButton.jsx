@@ -137,7 +137,7 @@ export default function AddButton({ data, setData, setFetch }) {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 min-w-[320px] max-h-[100dvh] overflow-y-auto"
+            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 w-[320px] max-h-[100dvh] overflow-y-auto"
           >
             <div className="flex flex-col gap-2 justify-between">
               <div

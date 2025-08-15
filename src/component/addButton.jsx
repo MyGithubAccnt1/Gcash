@@ -8,7 +8,6 @@ import axios from "axios";
 
 export default function AddButton({ data, setData, setFetch }) {
   const [filterModal, setFilterModal] = useState(false);
-
   const inputRef1 = useRef(null);
   const inputRef2 = useRef(null);
   const [image, setImage] = useState(null);

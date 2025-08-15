@@ -3,7 +3,7 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
-import { GS_POST_GCASH_URL } from "../utils/constant";
+import { GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79, GS_POST_GCASH_URL } from "../utils/constant";
 import axios from "axios";
 
 export default function AddButton({ data, setData, setFetch }) {
@@ -19,7 +19,7 @@ export default function AddButton({ data, setData, setFetch }) {
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const ocrScanner = Ocr({ number: "+63 915 349 8132" });
+  const ocrScanner = Ocr({ number: localStorage.getItem('mobile_number') ?? "+63 915 349 8132" });
   function handleCloseModal() {
     if (
       window.confirm(
@@ -87,11 +87,14 @@ export default function AddButton({ data, setData, setFetch }) {
     try {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
-      const response = await axios.post(GS_POST_GCASH_URL, params, {
+      const response = await axios.post(localStorage.getItem('registration') === 'd60d97c6-f896-4f6b-826c-0a9b945dde79'
+      ? GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79 
+      : GS_POST_GCASH_URL
+      , params, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
-      });
+      })
       console.log("Server response:", response.data);
     } catch (error) {
       console.error(
@@ -100,7 +103,7 @@ export default function AddButton({ data, setData, setFetch }) {
       );
     }
 
-    localStorage.setItem("data", JSON.stringify(updated));
+    localStorage.setItem("gcash_data", JSON.stringify(updated));
     setData(updated);
     setFetch((prev) => !prev);
     setFilterModal(false);

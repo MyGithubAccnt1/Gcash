@@ -55,6 +55,18 @@ export default function FetchData({ data, search, filter }) {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
   return (
     <div className="h-full !p-5 flex flex-col gap-2 overflow-y-auto">
       <div className="flex flex-col md:flex-row md:justify-between gap-2">
@@ -102,13 +114,13 @@ export default function FetchData({ data, search, filter }) {
                 Ref No.: <b>{item.refNo}</b>
               </div>
               <div className="text-sm font-bold">
-                Date: <b>{item.date}</b>
+                Date: <b>{formatDate(item.date)}</b>
               </div>
             </div>
           ))
         ) : (
           <div>
-            <div className="text-sm">
+            <div className="!p-2 text-sm text-center">
               <b>No records were found.</b>
             </div>
           </div>
@@ -235,7 +247,7 @@ export default function FetchData({ data, search, filter }) {
                   {item.refNo}
                 </td>
                 <td className="!px-2 border-s border-gray-300 border-r-0 text-sm">
-                  {item.date}
+                  {formatDate(item.date)}
                 </td>
               </tr>
             ))

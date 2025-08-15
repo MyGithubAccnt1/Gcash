@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
-  faBookJournalWhills,
+  // faBookJournalWhills,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import Burger from "./component/burger";
@@ -39,7 +39,7 @@ function App() {
               </h1>
             </NavLink>
 
-            <NavLink
+            {/* <NavLink
               onClick={() => setButton(false)}
               to="/kanban-board"
               className="bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
@@ -51,7 +51,7 @@ function App() {
                 />
                 Feature Discussion
               </h1>
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               onClick={() => setButton(false)}

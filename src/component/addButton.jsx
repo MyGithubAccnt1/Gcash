@@ -19,7 +19,7 @@ export default function AddButton({ data, setData, setFetch }) {
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const ocrScanner = Ocr({ number: localStorage.getItem('mobile_number') ?? "+63 915 349 8132" });
+  const ocrScanner = Ocr({ number: localStorage.getItem('mobile_number') ?? "+63 912 345 6789" });
   function handleCloseModal() {
     if (
       window.confirm(
@@ -73,11 +73,16 @@ export default function AddButton({ data, setData, setFetch }) {
 
     setLoading(true);
 
+    const money = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+
     const newEntry = {
       system: "gcash",
       mode: mode,
       to: number,
-      amount: amount,
+      amount: money,
       refNo: reference,
       date: date,
     };
@@ -116,6 +121,28 @@ export default function AddButton({ data, setData, setFetch }) {
     inputRef1.current.value = null;
     inputRef2.current.value = null;
     setLoading(false);
+  };
+
+  const modeOptions = [
+    {value: ''},
+    {value: 'Sent'},
+    {value: 'Received'},
+    {value: 'Eletric Bill'},
+    {value: 'Internet Bill'},
+    {value: 'Water Bill'},
+    {value: 'Others'},
+  ]
+
+  const getFormattedNow = () => {
+    const now = new Date();
+    return now.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
   };
 
   return (
@@ -185,26 +212,29 @@ export default function AddButton({ data, setData, setFetch }) {
 
             <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
               <label
-                className={`absolute transition-all duration-300 select-none ${
-                  mode !== "" && mode !== null
-                    ? "text-sm italic top-1 text-gray-500"
-                    : "text-md"
-                }`}
+                className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
               >
                 Mode
               </label>
               <select
                 className="outline-none w-full"
                 value={mode || ""}
-                onChange={(e) => setMode(e.target.value)}
+                onChange={(e) => {
+                  setMode(e.target.value);
+                  e.target.value === 'Received' ? setNumber(localStorage.getItem('mobile_number')) : null;
+                }}
               >
-                <option className="bg-[rgba(0,0,0,0.1)]" value=""></option>
-                <option className="bg-[rgba(0,0,0,0.1)]" value="Sent">
-                  Sent
-                </option>
-                <option className="bg-[rgba(0,0,0,0.1)]" value="Received">
-                  Received
-                </option>
+                {modeOptions.map((option, index) => {
+                  return (
+                    <option
+                      key={index}
+                      className="bg-[rgba(0,0,0,0.1)]"
+                      value={option.value}
+                    >
+                      {option.value || 'Select Mode'}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
@@ -212,16 +242,15 @@ export default function AddButton({ data, setData, setFetch }) {
               <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
                 <label
                   htmlFor="sender"
-                  className={`absolute text-gray-500 transition-all duration-300 ${
-                    number ? "text-sm italic top-1" : "text-md"
-                  }`}
+                  className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
                 >
-                  Sender(+63 9XX XXX XXXX)
+                  Sender
                 </label>
                 <input
                   id="sender"
                   type="tel"
-                  pattern="\+63\s?\d{3}\s?\d{3}\s?\d{4}"
+                  pattern="\+63\s?9\d{2}\s?\d{3}\s?\d{4}"
+                  placeholder="ex. +63 9XX XXX XXXX"
                   value={number || ""}
                   onChange={(e) => setNumber(e.target.value)}
                   className="outline-none w-full bg-transparent"
@@ -233,9 +262,7 @@ export default function AddButton({ data, setData, setFetch }) {
               <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
                 <label
                   htmlFor="amount"
-                  className={`absolute text-gray-500 transition-all duration-300 ${
-                    amount ? "text-sm italic top-1" : "text-md"
-                  }`}
+                  className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
                 >
                   Amount
                 </label>
@@ -243,7 +270,8 @@ export default function AddButton({ data, setData, setFetch }) {
                   id="amount"
                   type="number"
                   step="0.01"
-                  min="0"
+                  min="0.01"
+                  placeholder="ex. 1000.00"
                   value={amount || ""}
                   onChange={(e) => setAmount(e.target.value)}
                   className="outline-none w-full bg-transparent"
@@ -255,16 +283,15 @@ export default function AddButton({ data, setData, setFetch }) {
               <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
                 <label
                   htmlFor="reference"
-                  className={`absolute text-gray-500 transition-all duration-300 ${
-                    reference ? "text-sm italic top-1" : "text-md"
-                  }`}
+                  className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
                 >
-                  Reference No.(XXXX XXX XXXXXX)
+                  Reference No.
                 </label>
                 <input
                   id="reference"
                   type="text"
                   pattern="\d{4}\s?\d{3}\s?\d{6}"
+                  placeholder="1234 567 891011"
                   inputMode="numeric"
                   value={reference || ""}
                   onChange={(e) => setReference(e.target.value)}
@@ -274,12 +301,10 @@ export default function AddButton({ data, setData, setFetch }) {
             )}
 
             {reference && (
-              <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
+              <div className="bg-[rgba(0,0,0,0.1)] !px-5 !pt-5 rounded-lg relative">
                 <label
                   htmlFor="date"
-                  className={`absolute text-gray-500 transition-all duration-300 ${
-                    date ? "text-sm italic top-1" : "text-md"
-                  }`}
+                  className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
                 >
                   Date
                 </label>
@@ -287,9 +312,11 @@ export default function AddButton({ data, setData, setFetch }) {
                   id="date"
                   type="text"
                   value={date || ""}
+                  placeholder={getFormattedNow()}
                   onChange={(e) => setDate(e.target.value)}
                   className="outline-none w-full bg-transparent"
                 />
+                <button className={`text-sm font-bold text-gray-500 hover:text-blue-700 ${date !== getFormattedNow() ? '' : 'invisible'}`} onClick={() => (setDate(getFormattedNow()))}>Use Date Today</button>
               </div>
             )}
 

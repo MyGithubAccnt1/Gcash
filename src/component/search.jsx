@@ -21,6 +21,16 @@ export default function Search({ setSearch, setFilter }) {
     }
     setFilterModal(false);
   };
+
+  const modeOptions = [
+    {value: 'All'},
+    {value: 'Sent'},
+    {value: 'Received'},
+    {value: 'Eletric Bill'},
+    {value: 'Internet Bill'},
+    {value: 'Water Bill'},
+    {value: 'Others'},
+  ]
   return (
     <>
       <form onSubmit={handleSearch} className="relative">
@@ -63,11 +73,7 @@ export default function Search({ setSearch, setFilter }) {
           >
             <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
               <label
-                className={`absolute transition-all duration-300 select-none ${
-                  mode !== "All" || mode !== null
-                    ? "text-sm italic top-1 text-gray-500"
-                    : "text-md"
-                }`}
+                className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
               >
                 Mode
               </label>
@@ -76,15 +82,17 @@ export default function Search({ setSearch, setFilter }) {
                 value={mode || ""}
                 onChange={(e) => setMode(e.target.value)}
               >
-                <option className="bg-[rgba(0,0,0,0.1)]" value="All">
-                  All
-                </option>
-                <option className="bg-[rgba(0,0,0,0.1)]" value="Sent">
-                  Sent
-                </option>
-                <option className="bg-[rgba(0,0,0,0.1)]" value="Received">
-                  Received
-                </option>
+                {modeOptions.map((option, index) => {
+                  return (
+                    <option
+                      key={index}
+                      className="bg-[rgba(0,0,0,0.1)]"
+                      value={option.value}
+                    >
+                      {option.value}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 

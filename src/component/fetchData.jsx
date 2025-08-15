@@ -37,7 +37,10 @@ export default function FetchData({ data, search, filter }) {
 
     profit = filteredData.reduce((acc, curr) => {
       const amount = Number(curr.amount);
-      const fee = Math.ceil(amount / 500) * 5;
+      let fee = Math.ceil(amount / 500) * 5;
+      if (curr.mode !== "Sent" && curr.mode !== "Received") {
+        fee += 15;
+      }
       return acc + fee;
     }, 0);
   }

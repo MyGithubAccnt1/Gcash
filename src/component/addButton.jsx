@@ -3,7 +3,10 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
-import { GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79, GS_POST_GCASH_URL } from "../utils/constant";
+import {
+  GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79,
+  GS_POST_GCASH_URL,
+} from "../utils/constant";
 import axios from "axios";
 
 export default function AddButton({ data, setData, setFetch }) {
@@ -18,7 +21,9 @@ export default function AddButton({ data, setData, setFetch }) {
   const [date, setDate] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const ocrScanner = Ocr({ number: localStorage.getItem('mobile_number') ?? "+63 912 345 6789" });
+  const ocrScanner = Ocr({
+    number: localStorage.getItem("mobile_number") ?? "+63 912 345 6789",
+  });
   function handleCloseModal() {
     if (
       window.confirm(
@@ -86,14 +91,18 @@ export default function AddButton({ data, setData, setFetch }) {
     try {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
-      const response = await axios.post(localStorage.getItem('registration') === 'd60d97c6-f896-4f6b-826c-0a9b945dde79'
-      ? GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79 
-      : GS_POST_GCASH_URL
-      , params, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+      const response = await axios.post(
+        localStorage.getItem("registration") ===
+          "d60d97c6-f896-4f6b-826c-0a9b945dde79"
+          ? GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79
+          : GS_POST_GCASH_URL,
+        params,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         }
-      })
+      );
       console.log("Server response:", response.data);
     } catch (error) {
       console.error(
@@ -118,23 +127,23 @@ export default function AddButton({ data, setData, setFetch }) {
   };
 
   const modeOptions = [
-    {value: ''},
-    {value: 'Sent'},
-    {value: 'Received'},
-    {value: 'Eletric Bill'},
-    {value: 'Internet Bill'},
-    {value: 'Water Bill'},
-    {value: 'Others'},
-  ]
+    { value: "" },
+    { value: "Sent" },
+    { value: "Received" },
+    { value: "Eletric Bill" },
+    { value: "Internet Bill" },
+    { value: "Water Bill" },
+    { value: "Others" },
+  ];
 
   const getFormattedNow = () => {
     const now = new Date();
-    return now.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
+    return now.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
       hour12: true,
     });
   };
@@ -205,9 +214,7 @@ export default function AddButton({ data, setData, setFetch }) {
             )}
 
             <div className="bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg relative">
-              <label
-                className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1"
-              >
+              <label className="absolute text-gray-500 transition-all duration-300 text-sm font-bold top-1">
                 Mode
               </label>
               <select
@@ -215,7 +222,9 @@ export default function AddButton({ data, setData, setFetch }) {
                 value={mode || ""}
                 onChange={(e) => {
                   setMode(e.target.value);
-                  e.target.value === 'Received' ? setNumber(localStorage.getItem('mobile_number')) : null;
+                  e.target.value === "Received"
+                    ? setNumber(localStorage.getItem("mobile_number"))
+                    : null;
                 }}
               >
                 {modeOptions.map((option, index) => {
@@ -225,7 +234,7 @@ export default function AddButton({ data, setData, setFetch }) {
                       className="bg-[rgba(0,0,0,0.1)]"
                       value={option.value}
                     >
-                      {option.value || 'Select Mode'}
+                      {option.value || "Select Mode"}
                     </option>
                   );
                 })}
@@ -285,7 +294,7 @@ export default function AddButton({ data, setData, setFetch }) {
                   id="reference"
                   type="text"
                   pattern="\d{4}\s?\d{3}\s?\d{6}"
-                  placeholder="1234 567 891011"
+                  placeholder="ex. 1234 567 891011"
                   inputMode="numeric"
                   value={reference || ""}
                   onChange={(e) => setReference(e.target.value)}
@@ -306,11 +315,18 @@ export default function AddButton({ data, setData, setFetch }) {
                   id="date"
                   type="text"
                   value={date || ""}
-                  placeholder={getFormattedNow()}
+                  placeholder={`ex. ${getFormattedNow()}`}
                   onChange={(e) => setDate(e.target.value)}
                   className="outline-none w-full bg-transparent"
                 />
-                <button className={`text-sm font-bold text-gray-500 hover:text-blue-700 ${date !== getFormattedNow() ? '' : 'invisible'}`} onClick={() => (setDate(getFormattedNow()))}>Use Date Today</button>
+                <button
+                  className={`text-sm font-bold text-gray-500 hover:text-blue-700 ${
+                    date !== getFormattedNow() ? "" : "invisible"
+                  }`}
+                  onClick={() => setDate(getFormattedNow())}
+                >
+                  Use Date Today
+                </button>
               </div>
             )}
 

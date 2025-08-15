@@ -7,10 +7,10 @@ import { faRotate, faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 
 function Settings() {
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [registration, setRegistration] = useState('');
-  const [activationDate, setActivationDate] = useState('');
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [registration, setRegistration] = useState("");
+  const [activationDate, setActivationDate] = useState("");
   const inputRef1 = useRef(null);
   const inputRef2 = useRef(null);
   const [image, setImage] = useState(null);
@@ -19,12 +19,13 @@ function Settings() {
   const [amount, setAmount] = useState(null);
   const [reference, setReference] = useState(null);
   const [date, setDate] = useState(null);
+  const [email, setEmail] = useState(null);
 
   useEffect(() => {
-    setName(localStorage.getItem('name') || '');
-    setMobileNumber(localStorage.getItem('mobile_number') || '');
-    setRegistration(localStorage.getItem('registration') || '');
-    setActivationDate(localStorage.getItem('activation_date') || '');
+    setName(localStorage.getItem("name") || "");
+    setMobileNumber(localStorage.getItem("mobile_number") || "");
+    setRegistration(localStorage.getItem("registration") || "");
+    setActivationDate(localStorage.getItem("activation_date") || "");
   }, []);
 
   const handleRegistration = async (e) => {
@@ -42,16 +43,16 @@ function Settings() {
         },
       });
       const data = response.data[0].data;
-      localStorage.removeItem('name');
-      localStorage.removeItem('mobile_number');
-      localStorage.removeItem('registration');
-      localStorage.removeItem('activation_date');
+      localStorage.removeItem("name");
+      localStorage.removeItem("mobile_number");
+      localStorage.removeItem("registration");
+      localStorage.removeItem("activation_date");
 
-      localStorage.setItem('name', data[0]);
-      localStorage.setItem('mobile_number', data[1]);
-      localStorage.setItem('registration', data[2]);
-      localStorage.setItem('status', data[3]);
-      localStorage.setItem('activation_date', data[4]);
+      localStorage.setItem("name", data[0]);
+      localStorage.setItem("mobile_number", data[1]);
+      localStorage.setItem("registration", data[2]);
+      localStorage.setItem("status", data[3]);
+      localStorage.setItem("activation_date", data[4]);
 
       setName(data[0]);
       setMobileNumber(data[1]);
@@ -59,25 +60,22 @@ function Settings() {
       setActivationDate(data[4]);
     } catch (error) {
       handleReset();
-      alert.error(
-        "Error sending data:",
-        error.response?.data || error.message
-      );
+      alert.error("Error sending data:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleReset = () => {
-    localStorage.removeItem('name');
-    localStorage.removeItem('mobile_number');
-    localStorage.removeItem('registration');
-    localStorage.removeItem('activation_date');
-    setName('');
-    setMobileNumber('');
-    setRegistration('');
-    setActivationDate('');
-  }
+    localStorage.removeItem("name");
+    localStorage.removeItem("mobile_number");
+    localStorage.removeItem("registration");
+    localStorage.removeItem("activation_date");
+    setName("");
+    setMobileNumber("");
+    setRegistration("");
+    setActivationDate("");
+  };
 
   const handleImage = async (e) => {
     const file = e.target?.files?.[0];
@@ -101,18 +99,35 @@ function Settings() {
       setLoading(false);
     }
   };
+
+  const getFormattedNow = () => {
+    const now = new Date();
+    return now.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
   return (
     <>
       {loading && <Loader />}
       <div className="!p-5 h-screen flex flex-col gap-3">
         <div className="flex jusitfy-between">
-          <span className="text-xl"><b>Account Settings</b></span>
-          <button onClick={handleReset} className="!ms-auto flex items-center gap-1 cursor-pointer">
+          <span className="text-xl">
+            <b>Account Settings</b>
+          </span>
+          <button
+            onClick={handleReset}
+            className="!ms-auto flex items-center gap-1 cursor-pointer"
+          >
             <b>Reset</b>
             <FontAwesomeIcon icon={faRotate} />
           </button>
         </div>
-        { registration === '' ? (
+        {registration === "" ? (
           <div className="flex flex-col gap-3">
             <form onSubmit={handleRegistration} className="flex flex-col gap-3">
               <b className="text-yellow-200 text-center">
@@ -133,7 +148,7 @@ function Settings() {
                   className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
                 />
               </div>
-              <b className="md:!ms-auto">
+              <b className="md:!ms-auto md:w-1/4">
                 <button
                   type="submit"
                   className="text-center w-full bg-red-600 px-5! py-3! rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
@@ -143,18 +158,23 @@ function Settings() {
               </b>
             </form>
             <b className="text-yellow-200 text-center">
-              You don't have a registration code yet?
-              Get one now for as low as ₱100.
+              You don't have a registration code yet? Get one now for as low as
+              ₱100.
             </b>
-            <div className="flex flex-col md:flex-row gap-4">
-              <img src="../../public/mygcash.jpg" className="w-[320px]"/>
-              <form className="!p-2 flex flex-col gap-5 w-full">
+            <div className="flex flex-col lg:flex-row gap-4">
+              <img
+                src="../../public/mygcash.jpg"
+                className="w-[320px] object-contain !mx-auto"
+              />
+              <form className="!p-2 !py-5 flex flex-col gap-5 w-full">
                 <div>
                   <b className="text-gray-300">Name</b>
                   <input
                     type="text"
                     required
                     placeholder="Surname, First Name MI."
+                    value={name || ""}
+                    onChange={(e) => setName(e.target.value)}
                     className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
                   />
                 </div>
@@ -164,8 +184,10 @@ function Settings() {
                   <input
                     type="tel"
                     pattern="\+63\s?9\d{2}\s?\d{3}\s?\d{4}"
-                    placeholder="ex. +63 9XX XXX XXXX"
                     required
+                    placeholder="ex. +63 9XX XXX XXXX"
+                    value={number || ""}
+                    onChange={(e) => setNumber(e.target.value)}
                     className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
                   />
                 </div>
@@ -175,14 +197,16 @@ function Settings() {
                   <input
                     type="email"
                     required
+                    value={email || ""}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 justify-between">
+                <div className="flex flex-col gap-5 justify-between">
                   <div
                     onClick={() => inputRef1.current?.click()}
-                    className="md:!mx-auto w-full flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+                    className="md:!mx-auto w-full flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] bg-[rgba(255,255,255,0.3)] hover:bg-[rgba(255,255,255,0.2)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
                   >
                     <FontAwesomeIcon icon={faPlus} />
                     <i className="text-sm select-none">Upload Image</i>
@@ -197,7 +221,7 @@ function Settings() {
                   </div>
                   <div
                     onClick={() => inputRef2.current?.click()}
-                    className="md:hidden flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+                    className="md:hidden flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] bg-[rgba(255,255,255,0.3)] hover:bg-[rgba(255,255,255,0.2)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
                   >
                     <FontAwesomeIcon icon={faCamera} />
                     <i className="text-sm select-none">Capture Image</i>
@@ -213,17 +237,72 @@ function Settings() {
                   </div>
                 </div>
 
+                {image && (
+                  <div className="flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer">
+                    <img
+                      src={image}
+                      alt="Captured"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
 
+                <div>
+                  <b className="text-gray-300">Reference No.</b>
+                  <input
+                    id="reference"
+                    type="text"
+                    pattern="\d{4}\s?\d{3}\s?\d{6}"
+                    placeholder="ex. 1234 567 891011"
+                    required
+                    inputMode="numeric"
+                    value={reference || ""}
+                    onChange={(e) => setReference(e.target.value)}
+                    className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
+                  />
+                </div>
+
+                <div>
+                  <b className="text-gray-300">Date</b>
+                  <div className="relative">
+                    <input
+                      id="date"
+                      type="text"
+                      required
+                      value={date || ""}
+                      onChange={(e) => setDate(e.target.value)}
+                      className="outline-0 bg-[rgba(255,255,255,0.3)] text-black !p-2 w-full"
+                    />
+                    <button
+                      className={`text-sm font-bold text-gray-500 hover:text-blue-700 absolute right-5 top-[50%] transform -translate-y-1/2 ${
+                        date !== getFormattedNow() ? "" : "invisible"
+                      }`}
+                      onClick={() => setDate(getFormattedNow())}
+                    >
+                      Use Date Today
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
         ) : (
           <div className="flex flex-col font-bold gap-2 !px-5">
-            <span>Registration Code: <b className="text-gray-300">{registration}</b></span>
-            <span>Name: <b className="text-gray-300">{name}</b></span>
-            <span>Mobile Number: <b className="text-gray-300">{mobileNumber}</b></span>
-            <span>Status: <b className="text-gray-300">ACTIVATED</b></span>
-            <span>Activation Date: <b className="text-gray-300">{activationDate}</b></span>
+            <span>
+              Registration Code: <b className="text-gray-300">{registration}</b>
+            </span>
+            <span>
+              Name: <b className="text-gray-300">{name}</b>
+            </span>
+            <span>
+              Mobile Number: <b className="text-gray-300">{mobileNumber}</b>
+            </span>
+            <span>
+              Status: <b className="text-gray-300">ACTIVATED</b>
+            </span>
+            <span>
+              Activation Date: <b className="text-gray-300">{activationDate}</b>
+            </span>
           </div>
         )}
       </div>

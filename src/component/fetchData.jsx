@@ -43,7 +43,7 @@ export default function FetchData({ data, search, filter }) {
   }
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const totalPages = Math.max(1, Math.ceil(filteredData.length / rowsPerPage));
   const currentPageSafe = Math.min(currentPage, totalPages);
   const startIndex = (currentPageSafe - 1) * rowsPerPage;

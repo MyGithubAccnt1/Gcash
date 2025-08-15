@@ -204,7 +204,6 @@ export default function Index() {
     const task = createTask({ title: title, content: content });
 
     setTodos((prev) => {
-      // console.log(prev);
       return [...prev, task];
     });
 

@@ -3,7 +3,7 @@ import { faPlus, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef } from "react";
 import Loader from "./loader";
 import Ocr from "../utils/ocr";
-import { GS_GCASH_URL } from "../utils/constant";
+import { GS_POST_GCASH_URL } from "../utils/constant";
 import axios from "axios";
 
 export default function AddButton({ data, setData, setFetch }) {
@@ -87,12 +87,12 @@ export default function AddButton({ data, setData, setFetch }) {
     try {
       const params = new URLSearchParams();
       params.append("data", JSON.stringify(newEntry));
-
-      await axios.post(GS_GCASH_URL, params, {
+      const response = await axios.post(GS_POST_GCASH_URL, params, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
       });
+      console.log("Server response:", response.data);
     } catch (error) {
       console.error(
         "Error sending data:",
@@ -130,17 +130,16 @@ export default function AddButton({ data, setData, setFetch }) {
         <form
           onSubmit={handleSubmit}
           onClick={() => setFilterModal(false)}
-          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center
-          justify-center z-50 text-black"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50 text-black"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 max-w-[320px] max-h-[100dvh] overflow-y-auto"
+            className="bg-white !p-5 rounded shadow-lg flex flex-col gap-4 min-w-[320px] max-h-[100dvh] overflow-y-auto"
           >
-            <div className="flex gap-2 justify-between">
+            <div className="flex flex-col gap-2 justify-between">
               <div
                 onClick={() => inputRef1.current?.click()}
-                className="md:!mx-auto flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
+                className="md:!mx-auto w-full flex flex-col items-center gap-1 border border-dashed hover:border-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)] !p-5 rounded-lg transition-all duration-300 cursor-pointer"
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <i className="text-sm select-none">Upload Image</i>

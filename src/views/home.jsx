@@ -4,7 +4,8 @@ import AddButton from "../component/addButton";
 import DownloadButton from "../component/downloadButton";
 import FetchData from "../component/fetchData";
 import Loader from "../component/loader";
-import { GS_GCASH_URL } from "../utils/constant";
+import { GS_GET_REGISTERED_GCASH_URL, GS_GET_GCASH_URL } from "../utils/constant";
+import axios from "axios";
 function Home() {
     const [data, setData] = useState("");
     const [filter, setFilter] = useState("");
@@ -22,8 +23,8 @@ function Home() {
                 if (!isValidData) setLoading(true);
 
                 try {
-                    const response = await fetch(GS_GCASH_URL);
-                    const result = await response.json();
+                    const response = await axios.get(GS_GET_GCASH_URL);
+                    const result = await response.data;
                     const isValidResult = Array.isArray(result) ? result : [];
 
                     const isDifferent = JSON.stringify(data) !== JSON.stringify(isValidResult);

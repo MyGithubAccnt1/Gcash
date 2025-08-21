@@ -75,6 +75,17 @@ export default function AddButton({ data, setData, setFetch }) {
       return;
     }
 
+    const normalize = (val) => String(val).replace(/\s/g, "");
+
+    const isExisting = data.some(
+      (info) => normalize(info.refNo ?? "") === normalize(reference)
+    );
+
+    if (isExisting) {
+      alert("This reference already exists, this will not be saved.");
+      return;
+    }
+
     setLoading(true);
 
     const newEntry = {

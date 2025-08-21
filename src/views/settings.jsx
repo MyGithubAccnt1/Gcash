@@ -158,10 +158,11 @@ function Settings() {
               </b>
             </form>
             <b className="text-yellow-200 text-center">
-              You don't have a registration code yet? Get one now for as low as
-              ₱100.
+              This system is still under development. Expect better quality and
+              more features in the near future. Any feedback is highly
+              appreciated.
             </b>
-            <div className="flex flex-col lg:flex-row gap-4">
+            {/* <div className="flex flex-col lg:flex-row gap-4">
               <img
                 src="../../public/mygcash.jpg"
                 className="w-[320px] object-contain !mx-auto"
@@ -284,7 +285,7 @@ function Settings() {
                   </div>
                 </div>
               </form>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className="flex flex-col font-bold gap-2 !px-5">

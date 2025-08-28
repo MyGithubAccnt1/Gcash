@@ -1,8 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { FiSearch } from 'react-icons/fi'
+import { TiFilter } from 'react-icons/ti'
+import Button from './Button'
 
-export default function Search({ setSearch, setFilter }) {
+export default function Search({ setSearch, setFilter, options }) {
   const [filterModal, setFilterModal] = useState(false);
   const [mode, setMode] = useState(null);
   const [find, setFind] = useState("");
@@ -15,22 +16,13 @@ export default function Search({ setSearch, setFilter }) {
   const handleFilter = (e) => {
     e.preventDefault();
     if (mode === "All") {
-      setMode(null);
+      setMode("");
     } else {
       setFilter(mode);
     }
     setFilterModal(false);
   };
-
-  const modeOptions = [
-    {value: 'All'},
-    {value: 'Sent'},
-    {value: 'Received'},
-    {value: 'Eletric Bill'},
-    {value: 'Internet Bill'},
-    {value: 'Water Bill'},
-    {value: 'Others'},
-  ]
+  
   return (
     <>
       <form onSubmit={handleSearch} className="relative">
@@ -43,21 +35,15 @@ export default function Search({ setSearch, setFilter }) {
           className="bg-[rgba(255,255,255,0.3)] rounded-full px-5! px-12! py-3!"
         />
 
-        <label htmlFor="Search" className="cursor-pointer">
-          <FontAwesomeIcon
-            icon={faMagnifyingGlass}
-            className="absolute left-0 translate-x-[15%] top-[50%] -translate-y-[50%] rounded-full p-2! hover:bg-[rgba(0,0,0,0.1)]"
-          />
+        <label htmlFor="Search" className="p-3 rounded-full cursor-pointer absolute left-1 top-1/2 transform -translate-y-1/2">
+          <FiSearch />
         </label>
 
-        <span className="cursor-pointer">
-          <FontAwesomeIcon
-            onClick={() => {
-              setFilterModal(true);
-            }}
-            icon={faFilter}
-            className="absolute right-0 -translate-x-[15%] top-[50%] -translate-y-[50%] rounded-full p-2! hover:bg-[rgba(0,0,0,0.1)]"
-          />
+        <span className="p-3 rounded-full cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2"
+          onClick={() => {
+            setFilterModal(true);
+          }}>
+          <TiFilter />
         </span>
       </form>
 
@@ -65,7 +51,7 @@ export default function Search({ setSearch, setFilter }) {
         <form
           onSubmit={handleFilter}
           onClick={() => setFilterModal(false)}
-          className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50 text-black"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.2)] backdrop-blur-[6px] rounded flex items-center justify-center z-50 text-black"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -82,12 +68,13 @@ export default function Search({ setSearch, setFilter }) {
                 value={mode || ""}
                 onChange={(e) => setMode(e.target.value)}
               >
-                {modeOptions.map((option, index) => {
+                {options.map((option, index) => {
                   return (
                     <option
                       key={index}
                       className="bg-[rgba(0,0,0,0.1)]"
                       value={option.value}
+                      disabled={option.disabled}
                     >
                       {option.value}
                     </option>
@@ -96,17 +83,16 @@ export default function Search({ setSearch, setFilter }) {
               </select>
             </div>
 
-            <div className="flex justify-between">
-              <button
-                type="button"
-                className="hover:bg-[rgba(0,0,0,0.1)] !px-5 !py-3 rounded-lg transition-all duration-300 cursor-pointer"
+            <div className="flex justify-between gap-1">
+              <Button
+                className={`text-black hover:bg-[rgba(0,0,0,0.1)]`}
                 onClick={() => setFilterModal(false)}
               >
                 <b>Cancel</b>
-              </button>
+              </Button>
               <button
                 type="submit"
-                className="text-white bg-[#E50000] !px-5 !py-3 rounded-lg hover:rounded-full transition-all duration-300 cursor-pointer"
+                className="text-white bg-[#E50000] !px-5 !py-3 rounded-lg hover:rounded-[50px] transition-all duration-300 cursor-pointer"
               >
                 <b>Apply Filters</b>
               </button>

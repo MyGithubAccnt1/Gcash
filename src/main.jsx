@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
-import Home from "./views/home";
+import Index from "./views/index/Index";
 import Notfound from "./views/Notfound";
 import "./index.css";
 import CanbanBoard from "./views/canban/index";
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
       children: [
         {
           index: true,
-          element: <Home />,
+          element: <Index />,
         },
         {
           path: "kanban-board",

@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <div className="h-[100dvh] flex flex-col bg-gradient-to-t from-violet-500 to-blue-500 text-white">
-        <div className="flex flex-1 relative overflow-hidden">
+        <div className="flex h-full w-full relative overflow-hidden">
           <div
             className={`z-5 h-screen flex flex-col items-center gap-[2px] text-gray-500 font-bold w-[320px] bg-gradient-to-t from-violet-500 to-blue-500 md:bg-none md:bg-[rgba(255,255,255,0.1)] absolute md:relative md:left-0 top-0 transition-all duration-500 ${
               button ? "left-0" : "-left-[100%]"
@@ -64,8 +64,7 @@ function App() {
               </h1>
             </NavLink>
           </div>
-
-          <div className="flex flex-col w-full overflow-auto md:!py-5">
+          <div className="flex flex-col flex-1 overflow-y-auto md:p-5">
             <Burger button={button} setButton={setButton} />
             <Outlet />
           </div>

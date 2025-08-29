@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { TiFilter } from "react-icons/ti";
-import Button from "./Button";
 
 export default function Search({ setSearch, setFilter }) {
   const [find, setFind] = useState("");

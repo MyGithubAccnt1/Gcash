@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Loader from "../../component/loader";
-import Search from "./component/Search";
-import Button from "./component/Button";
+import Search from "../../component/Search";
+import Button from "../../component/Button";
 import { BiAddToQueue } from "react-icons/bi";
 import { FaFileDownload } from "react-icons/fa";
 import Modal from "../../component/Modal";
@@ -12,6 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   GS_GET_d60d97c6_f896_4f6b_826c_0a9b945dde79,
   GS_GET_GCASH_URL,
+  GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79,
+  GS_POST_GCASH_URL,
 } from "../../utils/constant";
 
 export default function Index() {
@@ -24,7 +26,7 @@ export default function Index() {
     filter: false,
     add: false,
   });
-  const [field, setField] = useState({
+  const field = {
     filter: [
       {
         type: "select",
@@ -41,19 +43,17 @@ export default function Index() {
           { value: "water bill" },
           { value: "others" },
         ],
-        required: true,
       },
     ],
     add: [
-      { type: "file", label: "Upload Image", name: "image" },
+      { type: "file", name: "image", accept: "image/*" },
       {
         type: "select",
         label: "Payment Mode",
-        name: "payment_mode",
+        name: "mode",
         placeholder: "select payment mode",
         options: [
           { value: "select payment mode", disabled: true },
-          { value: "all" },
           { value: "sent" },
           { value: "received" },
           { value: "eletric bill" },
@@ -61,14 +61,14 @@ export default function Index() {
           { value: "water bill" },
           { value: "others" },
         ],
-        required: true,
       },
       {
         type: "tel",
         label: "Sender",
         name: "sender",
-        pattern: "+63s?9d{2}s?d{3}s?d{4}",
+        pattern: `^\\+63\\s?9\\d{2}\\s?\\d{3}\\s?\\d{4}$`,
         placeholder: "ex. +63 9XX XXX XXXX",
+        required: true,
       },
       {
         type: "number",
@@ -77,9 +77,25 @@ export default function Index() {
         step: "0.01",
         min: "0.01",
         placeholder: "ex. 1000.00",
+        required: true,
+      },
+      {
+        type: "text",
+        label: "Reference No.",
+        name: "reference",
+        pattern: "^\\d{4}\\s?\\d{3}\\s?\\d{6}$",
+        inputMode: "numeric",
+        placeholder: "ex. 1234 567 891011",
+        required: true,
+      },
+      {
+        type: "text",
+        label: "Date",
+        name: "date",
+        required: true,
       },
     ],
-  });
+  };
   useEffect(() => {
     const fetchData = () => {
       const local = localStorage.getItem("gcash_data");
@@ -107,7 +123,7 @@ export default function Index() {
             localStorage.setItem("gcash_data", JSON.stringify(isValidResult));
           }
         } catch (error) {
-          console.error("Failed to fetch:", error);
+          console.error("Failed to fetch:", error.response.data.message);
         } finally {
           if (!isValidData) setLoading(false);
         }
@@ -118,18 +134,73 @@ export default function Index() {
 
     fetchData();
   }, [refetch]);
-
   const handleFilter = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     data.filter
-      ? (setFilter(data.filter),
+      ? (data.filter === "all" ? setFilter("") : setFilter(data.filter),
         setModal((prev) => ({
           ...prev,
           filter: false,
         })))
-      : toast.error("Payment Mode is required!");
+      : (setFilter(""),
+        setModal((prev) => ({
+          ...prev,
+          filter: false,
+        })));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const fields = Object.fromEntries(formData.entries());
+    const normalize = (reference) => String(reference).replace(/\s/g, "");
+    const isExisting = data.some(
+      (data) => normalize(data.refNo ?? "") === normalize(fields.reference)
+    );
+    if (isExisting) {
+      toast.error("This reference already exist and wouldn`t be saved.");
+      return;
+    }
+    setLoading(true);
+    const newEntry = {
+      system: "gcash",
+      mode: fields.mode,
+      to: fields.sender,
+      amount: fields.amount,
+      refNo: fields.reference,
+      date: fields.date,
+    };
+
+    const updated = [...data, newEntry];
+
+    try {
+      const params = new URLSearchParams();
+      params.append("data", JSON.stringify(newEntry));
+      await axios.post(
+        localStorage.getItem("registration") ===
+          "d60d97c6-f896-4f6b-826c-0a9b945dde79"
+          ? GS_POST_d60d97c6_f896_4f6b_826c_0a9b945dde79
+          : GS_POST_GCASH_URL,
+        params,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      setModal((prev) => ({
+        ...prev,
+        add: false,
+      }))
+      localStorage.setItem("gcash_data", JSON.stringify(updated));
+      setData(updated);
+      setFetch((prev) => !prev)
+    } catch (err) {
+      toast.error(err.response.data.message)
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -139,7 +210,7 @@ export default function Index() {
       >
         <Search
           setSearch={setSearch}
-          setFilter={(e) =>
+          setFilter={() =>
             setModal((prev) => ({
               ...prev,
               filter: true,
@@ -151,7 +222,7 @@ export default function Index() {
         md:flex-row md:justify-end md:items-center"
         >
           <Button
-            onClick={(e) =>
+            onClick={() =>
               setModal((prev) => ({
                 ...prev,
                 add: true,
@@ -185,27 +256,32 @@ export default function Index() {
           filter={filter}
         />
       </div>
+      
       {modal.filter && (
         <Modal
           onSubmit={handleFilter}
-          onClick={(e) =>
+          onClick={() =>
             setModal((prev) => ({
               ...prev,
               filter: false,
             }))
           }
           field={field.filter}
+          buttonName={'Apply Filters'}
         />
       )}
       {modal.add && (
         <Modal
-          onClick={(e) =>
+          onSubmit={handleSubmit}
+          onClick={() =>
             setModal((prev) => ({
               ...prev,
               add: false,
             }))
           }
           field={field.add}
+          setLoading={setLoading}
+          buttonName={'Save Record'}
         />
       )}
       <ToastContainer position="top-center" autoClose={3000} />

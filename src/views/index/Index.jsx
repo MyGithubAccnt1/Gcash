@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import Loader from "../../component/loader";
+import Loader from "../../component/Loader";
 import Search from "../../component/Search";
 import Button from "../../component/Button";
 import { BiAddToQueue } from "react-icons/bi";
 import { FaFileDownload } from "react-icons/fa";
 import Modal from "../../component/Modal";
 import FetchData from "../../component/fetchData";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -189,17 +191,65 @@ export default function Index() {
           },
         }
       );
+      toast.success("New record is successfully added.");
       setModal((prev) => ({
         ...prev,
         add: false,
-      }))
+      }));
       localStorage.setItem("gcash_data", JSON.stringify(updated));
       setData(updated);
-      setFetch((prev) => !prev)
+      setFetch((prev) => !prev);
     } catch (err) {
-      toast.error(err.response.data.message)
+      toast.error(err.response.data.message);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleDownload = () => {
+    if (data.length > 0) {
+      const filteredData = data.filter((info) => {
+        const filterByFilters = filter
+          ? info.mode.toLowerCase().includes(filter.toLowerCase())
+          : true;
+
+        const filterBySearch = search
+          ? Object.entries(info)
+              .filter(([key]) => key !== "mode")
+              .some(([, value]) =>
+                String(value).toLowerCase().includes(search.toLowerCase())
+              )
+          : true;
+        return filterByFilters && filterBySearch;
+      });
+
+      const updatedData = filteredData.map((item) => {
+        const amount = Number(item.amount);
+        const fee = Math.ceil(amount / 500) * 5;
+        return {
+          ...item,
+          profit: fee,
+        };
+      });
+
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+      const filename = `Gcash-${month}${day}${year}.xlsx`;
+
+      const worksheet = XLSX.utils.json_to_sheet(updatedData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "GCash");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
+      saveAs(blob, filename);
+    } else {
+      toast.error("No records were found.");
     }
   };
   return (
@@ -228,7 +278,7 @@ export default function Index() {
                 add: true,
               }))
             }
-            className={`bg-gradient-to-b from-red-300 via-red-400 to-red-500 text-white 
+            className={`bg-gradient-to-b from-red-300 via-red-400 to-red-500 text-white font-bold transition-all duration-300
                 hover:rounded-[50px]`}
           >
             <h6 className="flex items-center gap-2">
@@ -237,11 +287,12 @@ export default function Index() {
             </h6>
           </Button>
           <Button
-            className={`bg-gradient-to-b from-green-300 via-green-400 to-green-500 text-white 
+            onClick={handleDownload}
+            className={`bg-gradient-to-b from-green-300 via-green-400 to-green-500 text-white font-bold transition-all duration-300
                 hover:rounded-[50px]`}
           >
             <h6 className="flex items-center gap-2">
-              Add Record
+              Download Records
               <FaFileDownload />
             </h6>
           </Button>
@@ -249,14 +300,9 @@ export default function Index() {
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <FetchData
-          data={data}
-          setData={setData}
-          search={search}
-          filter={filter}
-        />
+        <FetchData data={data} search={search} filter={filter} />
       </div>
-      
+
       {modal.filter && (
         <Modal
           onSubmit={handleFilter}
@@ -267,7 +313,7 @@ export default function Index() {
             }))
           }
           field={field.filter}
-          buttonName={'Apply Filters'}
+          buttonName={"Apply Filters"}
         />
       )}
       {modal.add && (
@@ -281,7 +327,7 @@ export default function Index() {
           }
           field={field.add}
           setLoading={setLoading}
-          buttonName={'Save Record'}
+          buttonName={"Save Record"}
         />
       )}
       <ToastContainer position="top-center" autoClose={3000} />

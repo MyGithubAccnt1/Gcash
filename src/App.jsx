@@ -1,12 +1,8 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHome,
-  // faBookJournalWhills,
-  faGear,
-} from "@fortawesome/free-solid-svg-icons";
-import Burger from "./component/burger";
+import { ImHome } from "react-icons/im";
+import { GrUserSettings } from "react-icons/gr";
+import Burger from "./component/Burger";
 function App() {
   const [button, setButton] = useState(false);
   return (
@@ -31,35 +27,21 @@ function App() {
             <NavLink
               onClick={() => setButton(false)}
               to="/"
-              className="bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
+              className="bg-[rgba(255,255,255,0.2)] text-white w-full flex items-center gap-4 !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
             >
+              <ImHome />
               <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                <FontAwesomeIcon icon={faHome} className="text-white !me-3" />
                 Main Page
               </h1>
             </NavLink>
 
-            {/* <NavLink
-              onClick={() => setButton(false)}
-              to="/kanban-board"
-              className="bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
-            >
-              <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                <FontAwesomeIcon
-                  icon={faBookJournalWhills}
-                  className="text-white !me-3"
-                />
-                Feature Discussion
-              </h1>
-            </NavLink> */}
-
             <NavLink
               onClick={() => setButton(false)}
               to="/account-setting"
-              className="bg-[rgba(255,255,255,0.2)] w-full flex !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
+              className="bg-[rgba(255,255,255,0.2)] text-white w-full flex items-center gap-4 !ps-5 !py-3 transition-all duration-300 hover:bg-[rgba(255,255,255,0.3)]"
             >
+              <GrUserSettings />
               <h1 className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                <FontAwesomeIcon icon={faGear} className="text-white !me-3" />
                 Account Settings
               </h1>
             </NavLink>

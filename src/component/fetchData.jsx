@@ -1,11 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAnglesLeft,
-  faAngleLeft,
-  faAnglesRight,
-  faAngleRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { BiChevronsLeft } from "react-icons/bi";
+import { BiChevronLeft } from "react-icons/bi";
+import { BiChevronRight } from "react-icons/bi";
+import { BiChevronsRight } from "react-icons/bi";
 import { useState, useEffect } from "react";
+import Button from "./Button";
+
+export function ButtonWrapper({ onClick, disabled, children }) {
+  return (
+    <>
+      <button onClick={onClick} disabled={disabled} className="cursor-pointer">
+        <div className="rounded-md border border-gray-300 !px-3 !py-1 bg-gradient-to-b from-[rgba(255,255,255,0.1)] via-[rgba(255,255,255,0.2)] to-[rgba(255,255,255,0.3)] hover:bg-[rgba(255,255,255,0.3)]">
+          {children}
+        </div>
+      </button>
+    </>
+  );
+}
 
 export default function FetchData({ data, search, filter }) {
   let received = 0;
@@ -14,33 +24,40 @@ export default function FetchData({ data, search, filter }) {
   let filteredData = [];
 
   if (data.length > 0) {
-    filteredData = data.filter((item) => {
-      const matchesFilter = filter ? item.mode === filter : true;
-      const matchesSearch =
-        item.mode.toLowerCase().includes(search.toLowerCase()) ||
-        item.to.toLowerCase().includes(search.toLowerCase()) ||
-        item.amount.toString().includes(search) ||
-        item.refNo.toString().includes(search) ||
-        item.date.toString().includes(search);
-      return matchesFilter && matchesSearch;
+    filteredData = data.filter((info) => {
+      const filterByFilters = filter
+        ? info.mode.toLowerCase().includes(filter.toLowerCase())
+        : true;
+
+      const filterBySearch = search
+        ? Object.entries(info)
+            .filter(([key]) => key !== "mode")
+            .some(([, value]) =>
+              String(value).toLowerCase().includes(search.toLowerCase())
+            )
+        : true;
+      return filterByFilters && filterBySearch;
     });
   }
 
   if (filteredData.length > 0) {
-    received = filteredData
-      .filter((item) => item.mode === "Received")
+    sent = filteredData
+      .filter((item) => item.mode?.toLowerCase().trim() === "sent")
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-    sent = filteredData
-      .filter((item) => item.mode === "Sent")
+    received = filteredData
+      .filter((item) => item.mode?.toLowerCase().trim() === "received")
       .reduce((acc, curr) => acc + Number(curr.amount), 0);
 
     profit = filteredData.reduce((acc, curr) => {
       const amount = Number(curr.amount);
+      const mode = curr.mode?.toLowerCase().trim();
       let fee = Math.ceil(amount / 500) * 5;
-      if (curr.mode !== "Sent" && curr.mode !== "Received") {
+
+      if (mode !== "sent" && mode !== "received") {
         fee += 15;
       }
+
       return acc + fee;
     }, 0);
   }
@@ -61,12 +78,12 @@ export default function FetchData({ data, search, filter }) {
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
       hour12: true,
     });
   };
@@ -92,7 +109,8 @@ export default function FetchData({ data, search, filter }) {
           </b>
         </div>
       </div>
-      <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-md md:hidden flex-col">
+
+      <div className="w-full bg-[rgba(255,255,255,0.1)] rounded-md lg:hidden flex-col">
         {paginatedData.length > 0 ? (
           paginatedData.map((item, index) => (
             <div
@@ -111,9 +129,9 @@ export default function FetchData({ data, search, filter }) {
                 To: <b>{item.to}</b>
               </div>
               <div className="text-sm font-bold">
-                Amount:{' '}
+                Amount:{" "}
                 <b>
-                  {new Intl.NumberFormat('en-US', {
+                  {new Intl.NumberFormat("en-US", {
                     minimumFractionDigits: item.amount % 1 === 0 ? 0 : 2,
                     maximumFractionDigits: 2,
                   }).format(item.amount)}
@@ -140,7 +158,7 @@ export default function FetchData({ data, search, filter }) {
               <b className="text-sm">Rows Per Page:</b>
             </label>
 
-            <div className="rounded-md border border-gray-300 !px-2 !py-1 bg-[rgba(255,255,255,0.1)]">
+            <ButtonWrapper>
               <b className="text-sm">
                 <select
                   className="outline-0"
@@ -164,54 +182,51 @@ export default function FetchData({ data, search, filter }) {
                   </option>
                 </select>
               </b>
-            </div>
+            </ButtonWrapper>
           </div>
 
           <div className="flex flex-col gap-1">
-            <button className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]">
+            <ButtonWrapper>
               <b className="text-sm">
                 {currentPage} / {totalPages}
               </b>
-            </button>
-            <div className="flex w-full justify-center items-center gap-1">
-              <button
-                className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+            </ButtonWrapper>
+            <div className="flex w-full justify-around items-center gap-1">
+              <ButtonWrapper
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPageSafe === 1}
               >
-                <FontAwesomeIcon icon={faAnglesLeft} />
-              </button>
+                <BiChevronsLeft />
+              </ButtonWrapper>
 
-              <button
-                className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+              <ButtonWrapper
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPageSafe === 1}
               >
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </button>
+                <BiChevronLeft />
+              </ButtonWrapper>
 
-              <button
-                className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+              <ButtonWrapper
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={currentPageSafe === totalPages}
               >
-                <FontAwesomeIcon icon={faAngleRight} />
-              </button>
+                <BiChevronRight />
+              </ButtonWrapper>
 
-              <button
-                className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+              <ButtonWrapper
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPageSafe === totalPages}
               >
-                <FontAwesomeIcon icon={faAnglesRight} />
-              </button>
+                <BiChevronsRight />
+              </ButtonWrapper>
             </div>
           </div>
         </div>
       </div>
-      <table className="w-full bg-[rgba(255,255,255,0.1)] rounded-md hidden md:block">
+
+      <table className="w-full bg-[rgba(255,255,255,0.1)] rounded-md hidden lg:block">
         <thead className="border-b border-gray-300">
           <tr>
             <th className="w-[5dvw]"></th>
@@ -250,7 +265,7 @@ export default function FetchData({ data, search, filter }) {
                   {item.to}
                 </td>
                 <td className="!px-2 border-x border-gray-300 text-sm text-end">
-                  {new Intl.NumberFormat('en-US', {
+                  {new Intl.NumberFormat("en-US", {
                     minimumFractionDigits: item.amount % 1 === 0 ? 0 : 2,
                     maximumFractionDigits: 2,
                   }).format(item.amount)}
@@ -282,7 +297,7 @@ export default function FetchData({ data, search, filter }) {
                   <b className="text-sm">Rows Per Page:</b>
                 </label>
 
-                <div className="rounded-md border border-gray-300 !px-2 !py-1 bg-[rgba(255,255,255,0.1)]">
+                <ButtonWrapper>
                   <b className="text-sm">
                     <select
                       className="outline-0"
@@ -306,49 +321,45 @@ export default function FetchData({ data, search, filter }) {
                       </option>
                     </select>
                   </b>
-                </div>
+                </ButtonWrapper>
 
-                <button
-                  className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                <ButtonWrapper
                   onClick={() => setCurrentPage(1)}
                   disabled={currentPageSafe === 1}
                 >
-                  <FontAwesomeIcon icon={faAnglesLeft} />
-                </button>
+                  <BiChevronsLeft />
+                </ButtonWrapper>
 
-                <button
-                  className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                <ButtonWrapper
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
                   disabled={currentPageSafe === 1}
                 >
-                  <FontAwesomeIcon icon={faAngleLeft} />
-                </button>
+                  <BiChevronLeft />
+                </ButtonWrapper>
 
-                <button className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]">
+                <ButtonWrapper>
                   <b className="text-sm">
                     {currentPage} / {totalPages}
                   </b>
-                </button>
+                </ButtonWrapper>
 
-                <button
-                  className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                <ButtonWrapper
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPageSafe === totalPages}
                 >
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </button>
+                  <BiChevronRight />
+                </ButtonWrapper>
 
-                <button
-                  className="rounded-md border border-gray-300 !px-3 !py-1 bg-[rgba(255,255,255,0.1)] hover:bg-[rgba(255,255,255,0.3)]"
+                <ButtonWrapper
                   onClick={() => setCurrentPage(totalPages)}
                   disabled={currentPageSafe === totalPages}
                 >
-                  <FontAwesomeIcon icon={faAnglesRight} />
-                </button>
+                  <BiChevronsRight />
+                </ButtonWrapper>
               </div>
             </td>
           </tr>

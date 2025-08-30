@@ -2,16 +2,22 @@ import Button from "./Button";
 import { useRef, useState } from "react";
 import Ocr from "../utils/ocr";
 
-export default function Modal({ onSubmit, onClick, field, setLoading, buttonName }) {
+export default function Modal({
+  onSubmit,
+  onClick,
+  field,
+  setLoading,
+  buttonName,
+}) {
   const handleClose = () => {
     if (
       window.confirm(
-        "Are you sure you want to cancel? All changes will be deleted."
+        "Are you sure you want to close? All changes you made would be lost."
       )
     ) {
       onClick();
     }
-  }
+  };
   const capture = useRef(null);
   const upload = useRef(null);
   const ocrScanner = Ocr({
@@ -37,7 +43,7 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
         amount: ocrResult.amount.replace(/,/g, ""),
         reference: ocrResult.reference.trim(),
         date: ocrResult.date,
-      }))
+      }));
     } catch (err) {
       console.error("OCR error:", err.response.data.message);
     } finally {
@@ -69,7 +75,10 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
           <div className="space-y-3">
             {field?.map((field, index) =>
               field.type === "select" ? (
-                <div className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg" key={index}>
+                <div
+                  className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg"
+                  key={index}
+                >
                   <label
                     htmlFor={field.name}
                     className="uppercase font-bold text-sm select-none"
@@ -85,7 +94,7 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                       setFields((prev) => ({
                         ...prev,
                         mode: e.target.value,
-                      }))
+                      }));
                     }}
                   >
                     {field.options.map((option, index) => {
@@ -103,9 +112,18 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                   </select>
                 </div>
               ) : field.type === "file" ? (
-                <div className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg flex flex-col gap-3" key={index}>
-                  <div onClick={() => upload.current?.click()} className="flex flex-col items-center gap-1 bg-gradient-to-b from-[rgba(0,0,0,0.1)] via-[rgba(0,0,0,0.2)] to-[rgba(0,0,0,0.3)] p-5 rounded-lg transition-all duration-300 cursor-pointer hover:rounded-[50px]">
-                    <label htmlFor={field.name} className="uppercase font-bold text-sm select-none cursor-pointer">
+                <div
+                  className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg flex flex-col gap-3"
+                  key={index}
+                >
+                  <div
+                    onClick={() => upload.current?.click()}
+                    className="flex flex-col items-center gap-1 bg-gradient-to-b from-[rgba(0,0,0,0.1)] via-[rgba(0,0,0,0.2)] to-[rgba(0,0,0,0.3)] p-5 rounded-lg transition-all duration-300 cursor-pointer hover:rounded-[50px]"
+                  >
+                    <label
+                      htmlFor={field.name}
+                      className="uppercase font-bold text-sm select-none cursor-pointer"
+                    >
                       Upload Image
                     </label>
                     <input
@@ -117,8 +135,14 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                       onChange={handleImage}
                     />
                   </div>
-                  <div onClick={() => capture.current?.click()} className="md:hidden flex flex-col items-center gap-1 bg-gradient-to-b from-[rgba(0,0,0,0.1)] via-[rgba(0,0,0,0.2)] to-[rgba(0,0,0,0.3)] p-5 rounded-lg transition-all duration-300 cursor-pointer hover:rounded-[50px]">
-                    <label htmlFor={field.name} className="uppercase font-bold text-sm select-none cursor-pointer">
+                  <div
+                    onClick={() => capture.current?.click()}
+                    className="md:hidden flex flex-col items-center gap-1 bg-gradient-to-b from-[rgba(0,0,0,0.1)] via-[rgba(0,0,0,0.2)] to-[rgba(0,0,0,0.3)] p-5 rounded-lg transition-all duration-300 cursor-pointer hover:rounded-[50px]"
+                  >
+                    <label
+                      htmlFor={field.name}
+                      className="uppercase font-bold text-sm select-none cursor-pointer"
+                    >
                       Capture Image
                     </label>
                     <input
@@ -132,7 +156,10 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                   </div>
                 </div>
               ) : (
-                <div className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg relative" key={index}>
+                <div
+                  className="bg-[rgba(0,0,0,0.1)] p-5 rounded-lg relative"
+                  key={index}
+                >
                   <label
                     htmlFor={field.name}
                     className="uppercase font-bold text-sm select-none"
@@ -146,42 +173,58 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                     {...(field.step && { step: field.step })}
                     {...(field.min && { min: field.min })}
                     {...(field.inputMode && { inputMode: field.inputMode })}
-                    placeholder={field.name === "date" ? `ex. ${handleDate()}` : field.placeholder}
+                    placeholder={
+                      field.name === "date"
+                        ? `ex. ${handleDate()}`
+                        : field.placeholder
+                    }
                     className="outline-none w-full bg-transparent"
                     required={field.required}
-                    {...field.name === "sender" ? (
-                      {...(fields.sender && { 
-                        value: fields.sender,
-                        onChange: (e) => setFields((prev) => ({
-                          ...prev,
-                          sender: e.target.value,
-                        })),
-                      })}
-                    ) : field.name === "amount" ? (
-                      {...(fields.amount && { 
-                        value: fields.amount,
-                        onChange: (e) => setFields((prev) => ({
-                          ...prev,
-                          amount: e.target.value,
-                        }))
-                      })}
-                    ) : field.name === "reference" ? (
-                      {...(fields.reference && { 
-                        value: fields.reference,
-                        onChange: (e) => setFields((prev) => ({
-                          ...prev,
-                          reference: e.target.value,
-                        }))
-                      })}
-                    ) : field.name === "date" ? (
-                      {...(fields.date && { 
-                        value: fields.date,
-                        onChange: (e) => setFields((prev) => ({
-                          ...prev,
-                          date: e.target.value,
-                        }))
-                      })}
-                    ) : null}
+                    {...(field.name === "sender"
+                      ? {
+                          ...(fields.sender && {
+                            value: fields.sender,
+                            onChange: (e) =>
+                              setFields((prev) => ({
+                                ...prev,
+                                sender: e.target.value,
+                              })),
+                          }),
+                        }
+                      : field.name === "amount"
+                      ? {
+                          ...(fields.amount && {
+                            value: fields.amount,
+                            onChange: (e) =>
+                              setFields((prev) => ({
+                                ...prev,
+                                amount: e.target.value,
+                              })),
+                          }),
+                        }
+                      : field.name === "reference"
+                      ? {
+                          ...(fields.reference && {
+                            value: fields.reference,
+                            onChange: (e) =>
+                              setFields((prev) => ({
+                                ...prev,
+                                reference: e.target.value,
+                              })),
+                          }),
+                        }
+                      : field.name === "date"
+                      ? {
+                          ...(fields.date && {
+                            value: fields.date,
+                            onChange: (e) =>
+                              setFields((prev) => ({
+                                ...prev,
+                                date: e.target.value,
+                              })),
+                          }),
+                        }
+                      : null)}
                   />
                   {field.name === "date" && (
                     <button
@@ -189,10 +232,12 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
                       className={`text-sm font-bold text-blue-600 hover:text-blue-800 ${
                         fields.date !== handleDate() ? "" : "invisible"
                       }`}
-                      onClick={() => setFields((prev) => ({
-                        ...prev,
-                        date: handleDate(),
-                      }))}
+                      onClick={() =>
+                        setFields((prev) => ({
+                          ...prev,
+                          date: handleDate(),
+                        }))
+                      }
                     >
                       Use Date Today
                     </button>
@@ -204,15 +249,15 @@ export default function Modal({ onSubmit, onClick, field, setLoading, buttonName
 
           <div className="flex justify-between gap-5">
             <Button
-              className={`bg-gradient-to-b from-gray-300 via-gray-400 to-gray-500 text-black 
-                hover:rounded-[50px]`}
+              className={`text-white font-bold transition-all duration-300
+                hover:bg-[rgba(0,0,0,0.1)]`}
               onClick={handleClose}
             >
-              Cancel
+              Close
             </Button>
             <Button
               type={"submit"}
-              className={`bg-gradient-to-b from-red-300 via-red-400 to-red-500 text-white
+              className={`bg-gradient-to-b from-red-300 via-red-400 to-red-500 font-bold text-white transition-all duration-300
                 hover:rounded-[50px]`}
             >
               {buttonName}
